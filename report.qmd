@@ -2,7 +2,7 @@
 title: "RMDL Assessment 2: Data Analysis Report"
 authors:
   - name: B282928
-bibliography: references.bib
+bibliography: RMDL.bib
 execute: 
   echo: true
 format:
@@ -558,7 +558,9 @@ Additionally, the statistical model's prediction for the interaction between L2 
 
 ### Limitations
 
-Should have matched common/rare word actual color identity much more closely, if length could be matched too
+Among the hypothesis set out in this study, the evidence does not credibly bear on any of them. Further studies should be conducted with more participants to better understand the relationship between the Stroop effect and word frequency. While past studies have argued for a robust relationship between lexical decision tasks and word frequency in both L1 and L2 English populations, based on our results, we cannot make any claims as to the relationship between incongruous word-color naming and word frequency in the Stroop paradigm in either population.
+
+For the rare color word condition, this study used four rare color words unrelated to the font colors employed in the experiment. This is a severe limitation of the study, as it means that a congruous condition in rare color words is never observed by participants. Future studies should include length-matched rare and common words referring to the same font color to better explore this research question.
 
 ## Appendix
 
