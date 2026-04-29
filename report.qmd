@@ -9,98 +9,109 @@ execute:
 
 ## Background
 
-*Write a brief literature background for your Stroop task study. Explicitly state your Research Questions and, if available, your Research Hypotheses.*
+In English, word frequency is among the most important predictors of lexical recognition reaction times, accounting for substantial variance beyond other word features (Brysbaert et al, 2011). However, word frequency facilitation of lexical recognition is not uniform among speaker populations of a language. Diependaele et al (2013) found that the word frequency facilitation effect was much steeper in L2 English speakers than native speakers. Diependaele et al describes this asymmetry with the Lexical Entrenchment Account, which predicts that L2 speakers have weaker lexical representations for low-frequency words, while native speakers maintain relatively stronger representations of low-frequency words in the lexicon. Under this account, L2 speakers show longer reaction times on average due to weaker lexical entrenchment. However, for L2 speakers, increases in word frequency lead to proportionally greater facilitation of lexical recognition than for native speakers. This finding has been replicated in lexical decision tasks in Brysbaert et al (2017), which found that the frequency and language group interaction described above disappeared when controlling for vocabulary size, suggesting that it is lexical entrenchment, and not simply L2 status, that drives the asymmetry.
 
-In English, word frequency is among the most important predictors of lexical recognition reaction times, accounting for substantial variance beyond other word features (Brysbaert et al, 2011). However, word frequency facilitation of lexical recognition is not uniform among speaker populations of a language. Diependaele et al (2013) found that the word frequency facilitation effect was much steeper in L2 English speakers than native speakers. Diependaele et al describe this asymmetry in the Lexical Entrenchment Account, which predicts that L2 speakers have weaker lexical representations for low-frequency words, while native speakers maintain relatively stronger representations of low-frequency words in the lexicon. Under this account, L2 speakers show longer reaction times on average due to weaker lexical entrenchment. However, for L2 speakers, increases in word frequency lead to proportionally greater facilitation of lexical recognition than for native speakers. This finding has been replicated in lexical decision tasks in Brysbaert et al (2017), which found that the frequency and language group interaction described above disappeared when controlling for vocabulary size, suggesting that it is lexical entrenchment, and not simply L2 status, that drives the asymmetry.
-
-While the asymmetric relationship between word frequency and word recognition reaction times between L1 and L2 speakers has been studied under the Lexical Entrenchment Account, the theory's application to semantic representations of the word forms is less clear. The Stroop paradigm assesses participants' ability to "inhibit cognitive interference that occurs when the processing of a specific stimulus feature \[lexical orthography\] impedes the simultaneous processing of a second stimulus attribute \[color\]," causing a reaction time delay to conflicting orthographic-color pairs as the semantic activation of the written word conflicts with the font color itself. Therfore, whereas Diependale et al (2013) and Brysbaert et al (2017) investigated lexical recognition, this study seeks to better understand word recognition *automaticity* through the Stroop task paradigm.
+While the asymmetric relationship between word frequency and word recognition reaction times between L1 and L2 speakers has been studied under the Lexical Entrenchment Account, the theory's application to semantic representations of the word forms is less clear. The Stroop paradigm assesses participants' ability to "inhibit cognitive interference that occurs when the processing of a specific stimulus feature \[lexical orthography\] impedes the simultaneous processing of a second stimulus attribute \[color\]," causing a reaction time delay to conflicting orthographic-color pairs as the semantic activation of the written word conflicts with the font color itself (Scarpina & Tagini, 2017; Stroop, 1935). Therfore, whereas Diependale et al (2013) and Brysbaert et al (2017) investigated lexical recognition, this study seeks to better understand the relationship between word frequency effects and automatic semantic interference between L1 and L2 English speakers through the Stroop task paradigm.
 
 ### Research Questions
 
 The Lexical Entrenchment Account predicts lower lexical entrenchment for L2 speakers of English overall, and a greater relative difference in entrenchment between frequent and infrequent English words.
 
-1.  Does reduced lexical entrenchment lead to a reduction in automatic semantic activation as seen through the Stroop effect?
-2.  If so, does the asymmetric impact of word frequency on L1 and L2 speakers' lexical decision reaction times exist for automatic semantic interference as well?
+1.  Does reduced lexical entrenchment for infrequent words in L2 speakers lead to a reduction in automatic semantic activation as seen through the Stroop effect?
+2.  Word frequency has been observed to have an asymmetric impact between L1 and L2 speakers' lexical decision reaction times. Is a similar relationship observed between word frequency and automatic semantic interference in the Stroop effect?
 
 ### Research Hypotheses
 
-1.  Given
+Following assumptions of the lexical entrenchment account,
+
+- I predict that L1 speakers of English will have similar lexical entrenchment for infrequent (rare) and frequent (common) word colors. This will lead to credibly longer reaction times between the color and non-color words, demonstrating the Stroop effect, but reaction times between rare and common collors will not be credibly statistically different.
+
+- On the other hand, L2 English speakers will have much lower lexical entrenchment for rare words in English, leading to reduced automatic semantic interference during the Stroop task. Thus, L2 participants will respond more quickly overall, and will display a credibly greater difference in reaction times between rare and common words due to the greater difference in lexical entrenchment between the two conditions as compared to L1 speakers.
 
 ## Methods
 
 *Briefly report the methods of the study (participants, materials, procedure, statistical analysis...). Note that when discussing the statistical analysis you should clearly state how the analysis results will be used to assess the RQs/RHs (be as specific and precise as you can). **Include an Open Research/Data availability statement.***
+
+In order to address the main research questions and hypothesis, this study uses a Stroop task paradigm (Stroop, 1935). Participants are presented with English collor and non-color words of both high and low frequency, using Zipf score from the SUBTLEX UK database as a correlate of frequency. The stimuli set includes 16 words: 4 common colors, 4 rare colors, 4 common non-colors, and 4 rare non-colors. The non-color words are included as controls. A table including the total set of stimuli can be seen in Appendix A. The experiment varied all stimulus words using four font colors: black, blue, green, and brown, matching the common colors in the stimuli set. For the purposes of the Stroop task, common colors were judged as congruent and incongruent based on relation to the font color; all other stimuli types were judged as "control", as the congruence condition is not well defined.
+
+Given that this is a reading task, the current study controls for length of stimulus words in letters by balancing word length across categories. Stimuli were orthogonally matched. Both common and rare conditions contain an identical distribution of word lengths, ranging from three to six letters with a mean length of 4.75 letters for color terms and 4.0 letters for non-color controls.
+
+Stimuli were categorized into the “common” or “rare” condition based on their score on the Zipf scale from 1-7. These values were taken from the SUBTLEX Zipf (UK) data provided by the LexOPS dataset from Taylor et al (2020). All “common” stimulus items are Zipf scale value 4.8 or above, whereas all “rare” stimulus items are Zipf scale value 3.0 or below.
+
+In total, seven people participated in the experiment. Three were native Standard Mandarin speakers, while four were native English speakers.
+
+At the start of the experiment, participants were presented with the conditions of their participation in the study and asked for informed consent. They were then asked to fill out a language proficiency self-rating form describing their language proficiency in English and in Standard Mandarin with the following labels:
+
+- Native Speaker
+
+- High Proficiency (CEFR C1-C2)
+
+- Intermediate Proficiency (CEFR B1-B2)
+
+- Low Proficiency (CEFR A1-A2)
+
+- No proficiency
+
+An additional freeform text box was included for participants to indicate proficiency in any other languages. Full survey data concerning participant language proficiency self-reporting is shown in Appendix B.
+
+After the language proficiency survey, an information screen was presented describing the experimental task. Participants were instructed that words would appear on the screen, and asked to indicate the font color of the text, ignoring the meaning of the word. They were asked to use the keyboard keys 1, 2, 3, and 4 to indicate the font color of the word, and to answer as accurately and as quickly as possible. Throughout the experiment, a legend displaying the key from number key to color was shown at the bottom of the screen: "Press 1 for BLACK, 2 for [BLUE]{style="color:blue;"}, 3 for [GREEN]{style="color:green;"}, and 4 for [BROWN]{style="color:brown;"}."
+
+Following this, eight practice trials were presented to the participant with two congruent, two incongruent, and four control trials. After the practice block, one main trial block was presented to participants. Every stimulus word was presented in all four font colors, in a fully randomized order, for a total of 96 trials. Reaction times for each trial was measured as the difference between stimulus presentation onset and participant keypress onset.
+
+### Statistical Analysis
+
+As advocated in Barr et al (2013), this study employs a maximal random effects structure to analyze experiment data, using a Bayesian linear random effects model from the `brms` package in R to assess the difference in frequency effects between English L1 and L2 participants:
+
+$Reaction \space Time \sim Language \space Group \space * \space Common\_Rare \space * \space Color\_Noncolor \space + \space Word \space Length \space + \\ (Common\_Rare \space + \space Color\_Noncolor \space| \space Participant)$
+
+The primary dependent variable is reaction time, modeled using a LogNormal family. This structure explicitly models the interaction between group (L1 vs. L2), frequency of the stimulus word, and type (color word versus non-color word) and stimulus word length on reaction times, while controlling for word length's impact on reaction times. Given that all participants see multiple levels of word frequency and and type (color versus non-color word), these variables are included as random slopes.
+
+To address the research hypotheses, several model parameters are of interest.
+
+1.  L1 (Native) English speakers will have credibly longer reaction times in the color condition as compared to the non-color condition, replicating the Stroop effect.
+
+    - To evaluate this, we will look at the group
+
+2.  L1 (Native) English speakers will **not** have credibly longer reaction times between rare and common items within the color condition.
+
+    - To evaluate this, we
+
+3.  Compared to the L1 group, L2 (Non-native) English speakers will respond to all color items more quickly overall due to lower lexical entrenchment and thus less semantic interference when naming font colors.
+
+    - To assess this hypothesis,
+
+4.  Compared to the L1 group, L2 participants will demonstrate greater relative change in reaction times between rare and common items in the color condition, demonstrating the greater range of lexical entrenchment between the two levels of frequency.
+
+    - This hypothesis
 
 ## Data
 
 ### Workspace Setup
 
 ```{r}
+#| label: setup-packages
+
 library(tidyverse)
 library(languageR)
 library(ggplot2)
 library(devtools)
+library(tidybayes)
 library(brms)
 library(dplyr)
 library(plotly)
 library(posterior)
 library(kableExtra)
 devtools::install_github("JackEdTaylor/LexOPS@*release")
-
-lexops_df <- LexOPS::lexops
+library(LexOPS)
 ```
-
-*Remember to include all code and code output in the submission.*
 
 ### Read and process the data
 
 *Read the data here. If the data needs processing, like mutating columns or creating new ones, briefly explain why processing is needed and what you did*. *Include a description of each of the relevant columns in the data.*
 
-The actual trial will reduce to 4 test colors to allow participants to lay 4 fingers over the 1-4 keyboard keys, increasing viability of reaction times. 8 keys may be too slow in baseline response to generate useful data.
-
-with that in mind, let's cut the tibble down to size while keeping the word length balance.
-
-```{r}
-#| label: read-data
-
-
-library(LexOPS)
-
-common_colors <- c("green", "brown", "blue", "black")
-rare_colors <- c("sepia", "ochre", "mauve", "aqua")
-common_noncolors <- c("fast", "slow", "big", "small")
-rare_noncolors <- c("apex", "tusk", "nymph", "irk")
-
-my_words <- c(common_colors, rare_colors, common_noncolors, rare_noncolors)
-
-word_df <- data.frame(string = my_words) %>%
-  mutate(rarity = case_when(
-    string %in% common_colors | string %in% common_noncolors ~ "common",
-    string %in% rare_colors | string %in% rare_noncolors ~ "rare",
-    TRUE ~ "other" # Catch-all
-  ))
-
-word_df <- word_df %>%
-  mutate(color_noncolor = case_when(
-    string %in% common_colors | string %in% rare_colors ~ "color",
-    string %in% common_noncolors | string %in% rare_noncolors ~ "noncolor",
-    TRUE ~ "other" # Catch-all
-  ))
-    
-
-lookup_table <- lexops_df %>%
-  select(string, Zipf.SUBTLEX_UK, Length)
-
-# 2. Join the Zipf scores to your chart
-# This 'appends' the Zipf.SUBTLEX_UK and Length columns to your existing tags
-word_df_final <- word_df %>%
-  left_join(lookup_table, by = "string")
-
-word_df_final <- word_df_final |> 
-  mutate(Zipf.SUBTLEX_UK = round(Zipf.SUBTLEX_UK, digits=2)) |>
-  mutate(combined_condition = paste(rarity, color_noncolor, sep = "_"))
-```
-
 ### Importing trial data
+
+First, I downloaded all participant experimental result files from Testable as individual .csv files and put them in my repository's "results" folder. I then used the `list.files()` function to create a list of all results files in the /results/ folder. using `lapply()`, I read all the .csv folders into individual tibbles within data_lst, skipping the first 3 rows which contained Testable metadata. I then used `bind_rows()` to combine all trial files into one tibble called `rmdl_data`, and wrote this into my repository's /data/ folder for use to any other interested researchers who want to start analysis with a combined results file.
 
 ```{r}
 files_to_read = list.files(
@@ -113,14 +124,12 @@ data_lst <- lapply(files_to_read, function(x) {
   read_csv(x, skip = 3) #testable includes 3 rows at the top with metadata, skip these to get the main trial data
 })
 
-names(data_lst) <- seq_along(files_to_read)
-
 rmdl_data <- bind_rows(data_lst, .id = "participant_num")
 
 write.csv(rmdl_data, "data/rmdl_data.csv")
 ```
 
-Now we clean to get the language proficiency survey data from the Testable data files, and separate out the RT data from that proficiency form data.
+In the combined experimental data tibble, I used the `type` column to create two sub–tibbles, one for participant
 
 ```{r}
 survey_responses <- rmdl_data %>%
@@ -150,7 +159,6 @@ rmdl_data <- rmdl_data %>%
     )
   )
 
-
 rmdl_data_RT <- rmdl_data %>%
   filter(type == "test" & condition1 != "practice") %>%
   select(participant_num, type, stim1, color, key, condition1, condition2, RT, english_level, mandarin_level, other_level, rarity, color_noncolor, Zipf.SUBTLEX_UK, Length, combined_condition, congruence_condition, correct, group)
@@ -164,7 +172,6 @@ Visualizing main data patterns
 
 ```{r}
 rmdl_data_RT %>%
-  filter(RT < 4000) %>%
   ggplot(aes(x = english_level, y = RT, fill = english_level)) +
   geom_violin(alpha = 0.15) +
   geom_jitter(width = 0.2, alpha = 0.3, size = 0.8) +
@@ -192,27 +199,94 @@ Describe the summary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ```{r}
 my_seed = 4423
 
-#refactor english_level for low to high proficiency
-rmdl_data_RT <- rmdl_data_RT %>%
-  mutate(english_level = factor(english_level, levels = c("Intermediate Proficiency (CEFR B1-B2)", "High Proficiency (CEFR C1-C2)", "Native Speaker")))
-
 rmdl_data_bm <- brm(
-  RT ~ english_level * Zipf.SUBTLEX_UK + color_noncolor + Length + (Zipf.SUBTLEX_UK + Length | participant_num) + (1 | stim1), 
+  RT ~ group * rarity * color_noncolor + Length + (rarity + Length | participant_num), 
   data = rmdl_data_RT,
   family = lognormal,
   iter = 4000,
   cores = 4,
   seed = my_seed,
-  file = "cache/rmdl_bm3",
-  control = list(adapt_delta = 0.999, max_treedepth = 15)
+  file = "cache/rmdl_bm6",
+  control = list(adapt_delta = 0.99, max_treedepth = 15)
   )
 ```
 
 Summarize the model
 
 ```{r}
-summary(rmdl_data_bm, prob=0.89)
+summary(rmdl_data_bm, prob = 0.95)
 ```
+
+### Looking at MCMC draws from the model
+
+```{r}
+rmdl_data_bm_draws <- as_draws_df(rmdl_data_bm)
+
+# Now, following the QML textbook lesson 35, we transform the predictors relative relationships into combined values
+rmdl_data_bm_draws_combined <- rmdl_data_bm_draws %>% mutate(
+  eng_common_color = b_Intercept,
+  mand_common_color = b_Intercept + b_groupMandarin,
+  eng_rare_color = b_Intercept + b_rarityrare,
+  eng_common_noncolor = b_Intercept + b_color_noncolornoncolor,
+  mand_rare_color = b_Intercept + b_rarityrare + `b_groupMandarin:rarityrare`,
+  mand_common_noncolor = b_Intercept + b_color_noncolornoncolor + `b_groupMandarin:color_noncolornoncolor`,
+  eng_rare_noncolor = b_Intercept + b_rarityrare + `b_rarityrare:color_noncolornoncolor`,
+  mand_rare_noncolor = b_Intercept + b_groupMandarin + b_rarityrare + `b_rarityrare:color_noncolornoncolor` + `b_groupMandarin:rarityrare:color_noncolornoncolor`,
+) %>%
+  select(eng_common_color, mand_common_color, eng_rare_color, eng_common_noncolor, mand_rare_color, mand_common_noncolor, eng_rare_noncolor, mand_rare_noncolor)
+```
+
+Now, we can look at the relevant variables described in Methods to address the research hypothesis.
+
+#### 1. L1 Stroop Replication
+
+For this hypothesis, L1 reaction times in the color condition should be credibly slower than in the noncolor condition, regardless of rarity.
+
+I am using the QML textbook Chapter 35 instructions to create a plot to assess the difference between these conditions.
+
+```{r}
+draws_combined_epred_H1 <- rmdl_data_bm_draws_combined %>%
+  select(eng_common_color, eng_rare_color, eng_common_noncolor, eng_rare_noncolor) %>%
+  pivot_longer(eng_common_color:eng_rare_noncolor, names_to = "cond", values_to = "epred") %>%
+  mutate(
+    cond = case_when(
+      cond == "eng_common_color" | cond == "eng_rare_color" ~ "Color",
+      cond == "eng_common_noncolor" | cond == "eng_rare_noncolor" ~ "Noncolor",
+      TRUE ~ "" #Catch-all, should never be triggered
+     )
+  ) 
+
+draws_combined_epred_H1 %>%
+  ggplot(aes(epred, cond)) +
+  stat_halfeye() + 
+  labs(title="Expected Log-RT Reaction Time Predictions for English L1 Speakers", x="Predicted Reaction Times (Log-RTs)", y="Condition")
+```
+
+#### 2. L1 Rare and Common Colors - Reaction Time Equivalence Hypothesis
+
+For this hypothesis, L1 reaction times should not be credibly different between the rare and common color conditions.
+
+```{r}
+draws_combined_epred_H2 <- rmdl_data_bm_draws_combined %>%
+  select(eng_common_color, eng_rare_color, eng_common_noncolor, eng_rare_noncolor) %>%
+  pivot_longer(eng_common_color:eng_rare_noncolor, names_to = "cond", values_to = "epred") %>%
+  mutate(
+    cond = case_when(
+      cond == "eng_common_color" | cond == "eng_rare_color" ~ "Color",
+      cond == "eng_common_noncolor" | cond == "eng_rare_noncolor" ~ "Noncolor",
+      TRUE ~ "" #Catch-all, should never be triggered
+     )
+  ) 
+
+draws_combined_epred_H1 %>%
+  ggplot(aes(epred, cond)) +
+  stat_halfeye() + 
+  labs(title="Expected Log-RT Reaction Time Predictions for English L1 Speakers", x="Predicted Reaction Times (Log-RTs)", y="Condition")
+```
+
+#### 3. L2 Faster Overall Reaction Times to Colors
+
+#### 4. L2 Greater Difference Between Rare and Common Color Reaction Times
 
 ## Discussion
 
@@ -220,7 +294,67 @@ summary(rmdl_data_bm, prob=0.89)
 
 ## Appendix
 
-### Building the Testable file
+### A. Stimuli Generation and Table
+
+The actual trial will reduce to 4 test colors to allow participants to lay 4 fingers over the 1-4 keyboard keys, increasing viability of reaction times. 8 keys may be too slow in baseline response to generate useful data.
+
+with that in mind, let's cut the tibble down to size while keeping the word length balance.
+
+```{r}
+#| label: read-data
+
+lexops_df <- LexOPS::lexops
+
+common_colors <- c("green", "brown", "blue", "black")
+rare_colors <- c("sepia", "ochre", "mauve", "aqua")
+common_noncolors <- c("fast", "slow", "big", "small")
+rare_noncolors <- c("apex", "tusk", "nymph", "irk")
+
+my_words <- c(common_colors, rare_colors, common_noncolors, rare_noncolors)
+
+word_df <- tibble(string = my_words) %>%
+  mutate(rarity = case_when(
+    string %in% common_colors | string %in% common_noncolors ~ "common",
+    string %in% rare_colors | string %in% rare_noncolors ~ "rare",
+    TRUE ~ "other" # Catch-all, should never be used
+  ))
+
+word_df <- word_df %>%
+  mutate(color_noncolor = case_when(
+    string %in% common_colors | string %in% rare_colors ~ "color",
+    string %in% common_noncolors | string %in% rare_noncolors ~ "noncolor",
+    TRUE ~ "other" # Catch-all, should never be used
+  ))
+    
+lookup_table <- lexops_df %>%
+  select(string, Zipf.SUBTLEX_UK, Length)
+
+word_df_final <- word_df %>%
+  left_join(lookup_table, by = "string")
+
+word_df_final <- word_df_final |> 
+  mutate(Zipf.SUBTLEX_UK = round(Zipf.SUBTLEX_UK, digits=2)) |>
+  mutate(combined_condition = paste(rarity, color_noncolor, sep = "_"))
+
+word_df_final %>%
+  select(string, rarity, color_noncolor, Zipf.SUBTLEX_UK, Length) %>%
+  knitr::kable(
+    digits = 2,
+    col.names = c("Word", "Rarity", "Color or Noncolor", "SUBTLEX Zipf Score (UK)", "Length in Letters")
+  ) %>% kable_styling()
+```
+
+### B. Participant Language Proficiency Survey Results
+
+```{r}
+survey_responses %>%
+  knitr::kable(
+    digits = 2,
+    col.names = c("Participant ID", "English Proficiency", "Standard Mandarin Proficiency", "Other Languages")
+  ) %>% kable_styling()
+```
+
+### C. Building the Testable file
 
 We then create a "key" tibble to map keypress responses to font color.
 
@@ -249,7 +383,7 @@ exp_trialfile <- exp_trialfile %>% mutate(
 )
 ```
 
-We want to get a 1:1 ratio of critical vs control trials
+We want to get a 1:2 ratio of critical vs control trials
 
 ```{r}
 exp_trialfile_crit <- exp_trialfile %>% 
