@@ -5,6 +5,10 @@ authors:
 bibliography: references.bib
 execute: 
   echo: true
+format:
+  pdf:
+    fig-width: 6
+    fig-height: 4
 ---
 
 ## Background
@@ -98,7 +102,7 @@ The Testable experiment file used to run the experiment is generated within this
 
 ### Workspace Setup, Package loading
 
-```{r}
+```{r, message = FALSE}
 #| label: setup-packages
 
 library(tidyverse)
@@ -111,7 +115,7 @@ library(dplyr)
 library(plotly)
 library(posterior)
 library(kableExtra)
-devtools::install_github("JackEdTaylor/LexOPS@*release")
+pak::pak("JackEdTaylor/LexOPS@*release")
 library(LexOPS)
 ```
 
@@ -121,7 +125,7 @@ library(LexOPS)
 
 First, I downloaded all participant experimental result files from Testable as individual .csv files and put them in my repository's "results" folder. I then used the `list.files()` function to create a list of all results files in the /results/ folder. using `lapply()`, I read all the .csv folders into individual tibbles within data_lst, skipping the first 3 rows which contained Testable metadata. I then used `bind_rows()` to combine all trial files into one tibble called `rmdl_data`, and wrote this into my repository's /data/ folder for use to any other interested researchers who want to start analysis with a combined results file.
 
-```{r}
+```{r, message = FALSE}
 files_to_read = list.files(
   path = "./results/",
   pattern = "*.csv$",
@@ -129,11 +133,14 @@ files_to_read = list.files(
   full.names = TRUE
 )
 data_lst <- lapply(files_to_read, function(x) {
-  read_csv(x, skip = 3) #testable includes 3 rows at the top with metadata, skip these to get the main trial data
+  read_csv(x, skip = 3) #testable includes 3 rows at the top with metadata, 
+                        #skip these to get the main trial data
 })
 
 rmdl_data <- bind_rows(data_lst, .id = "participant_num") %>%
-  filter(condition2 != "congruent" | is.na(condition2)) #Since we are studying the inhibitory effect of word-color pairs, so we are only going to look at incongruent and control trials.
+  filter(condition2 != "congruent" | is.na(condition2)) 
+#Since we are studying the inhibitory effect of word-color pairs,
+#we are only going to look at incongruent and control trials.
 
 write.csv(rmdl_data, "data/rmdl_data.csv")
 ```
@@ -164,9 +171,16 @@ In the combined experimental data tibble, I used the `type` column to create two
 survey_responses <- rmdl_data %>%
   filter(type == "form") %>%
   mutate(
-    english_level  = ifelse(head == "What is your English language READING ability?", response, NA),
-    mandarin_level = ifelse(head == "What is your Standard Mandarin (普通话) language READING ability?", response, NA),
-    other_level    = ifelse(head == "Are you proficient in or learning any other foreign languages? (Please include the name of the language and your proficiency self-assessment.)", response, NA)
+    english_level  = ifelse(head == 
+    "What is your English language READING ability?", response, NA),
+    mandarin_level = ifelse(head == 
+    "What is your Standard Mandarin (普通话) language READING ability?", 
+    response, NA),
+    other_level = ifelse(head == 
+    "Are you proficient in or learning any other foreign languages? 
+    (Please include the name of the language 
+    and your proficiency self-assessment.)"
+    , response, NA)
   ) %>%
   group_by(participant_num) %>%
   summarise(
@@ -191,7 +205,10 @@ rmdl_data <- rmdl_data %>%
 rmdl_data_RT <- rmdl_data %>%
   #We will drop 
   filter(type == "test" & condition1 != "practice") %>%
-  select(participant_num, type, stim1, color, key, condition1, condition2, RT, english_level, mandarin_level, other_level, rarity, color_noncolor, Zipf.SUBTLEX_UK, Length, combined_condition, congruence_condition, correct, group)
+  select(participant_num, type, stim1, color, key, condition1, condition2, 
+         RT, english_level, mandarin_level, other_level, rarity, 
+         color_noncolor, Zipf.SUBTLEX_UK, Length, combined_condition,
+         congruence_condition, correct, group)
 ```
 
 ### Plotting the data
@@ -199,14 +216,32 @@ rmdl_data_RT <- rmdl_data %>%
 #### Figure 1.
 
 ```{r}
-#The code will print the figures, but you can find a saved vector graphic version in the 'figures' subfolder. 
+#The code will print the figures, 
+#but you can find a saved vector graphic version in the 'figures' subfolder. 
 rawdata_violin <- rmdl_data_RT %>%
+  #Shortening X axis labels for readability.
+  mutate(
+    english_level = case_when(
+      english_level == "Native Speaker" ~ "Native",
+      english_level == "High Proficiency (CEFR C1-C2)" ~ "High",
+      english_level == "Intermediate Proficiency (CEFR B1-B2)" ~
+        "Intermediate",
+      english_level == "Low Proficiency (CEFR A1-A2)" ~
+        "Low",
+      TRUE ~ "None"
+    )
+  ) %>%
   ggplot(aes(x = english_level, y = RT, fill = english_level)) +
   geom_violin(alpha = 0.15) +
   geom_jitter(width = 0.2, alpha = 0.6, size = 0.8) +
   facet_wrap(~rarity) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none") +
-  labs(x = "English Level", y = "RT (ms)", title = "RT by L1/L2 status and color rarity", subtitle="Only color items considered")
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
+        legend.position="none") +
+  labs(
+    x = "English Proficiency", 
+    y = "RT (ms)", 
+    title = "RT by L1/L2 status and color rarity", 
+    subtitle="Only color items considered")
 
 rawdata_violin
 
@@ -222,8 +257,17 @@ rawdata_L1_color_noncolor_condition <- rmdl_data_RT %>%
   filter(group == "English") %>%
   ggplot(aes(x = color_noncolor, y = RT, color=color_noncolor)) +
   geom_jitter(width = 0.2, alpha = 0.6, size = 1.4) +
-  scale_color_brewer(name = "Color-Noncolor Condition", labels = c("Color", "Noncolor"), palette = "Set1", type = "div", guide="none") +
-  labs(x = "Color and Non-Color Condition", y = "RT (ms)", title = "RT by Color-Noncolor Condition for L1 English speakers", subtitle="Rare and common items considered")
+  scale_color_brewer(
+    name = "Color-Noncolor Condition", 
+    labels = c("Color", "Noncolor"), 
+    palette = "Set1", 
+    type = "div", 
+    guide="none") +
+  labs(
+    x = "Color and Non-Color Condition", 
+    y = "RT (ms)", 
+    title = "RT by Color-Noncolor Condition for L1 English speakers", 
+    subtitle="Rare and common items considered")
 
 rawdata_L1_color_noncolor_condition
 
@@ -239,8 +283,15 @@ rawdata_L1_color_condition <- rmdl_data_RT %>%
   filter(group == "English") %>%
   ggplot(aes(x = Zipf.SUBTLEX_UK, y = RT, color=rarity)) +
   geom_jitter(width = 0.2, alpha = 0.6, size = 1.4) +
-  scale_color_brewer(name = "Rarity Condition", labels = c("common", "rare"), palette = "Set1", type = "div") +
-  labs(x = "Zipf Score (SUBTLEX UK)", y = "RT (ms)", title = "RT by Zipf Score (SUBTLEX UK) for L1 English speakers", subtitle="Only color items considered")
+  scale_color_brewer(
+    name = "Rarity Condition", 
+    labels = c("common", "rare"), 
+    palette = "Set1", type = "div") +
+  labs(
+    x = "Zipf Score (SUBTLEX UK)", 
+    y = "RT (ms)", 
+    title = "RT by Zipf Score (SUBTLEX UK) for L1 English speakers", 
+    subtitle="Only color items considered")
 
 rawdata_L1_color_condition
 
@@ -254,8 +305,17 @@ Figure 3. This figure plots reaction times on the Y axis and Zipf score (SUBTLEX
 ```{r}
  rmdl_data_RT %>%
   group_by(group) %>%
-  summarise(mean = mean(RT), median(RT), sd(RT), min(RT), max(RT), n = n())
+  summarise(
+    mean = mean(RT), median(RT), sd(RT), min(RT), max(RT), n = n()
+    ) %>%
+  knitr::kable(
+    digits = 2,
+    col.names = 
+      c("Group", "Mean RT", "Median RT", "RT SD", "Min RT", "Max RT", "n")
+  ) %>% kable_styling(full_width = F)
 ```
+
+The data summary shows that L2 English (Mandarin) participants had higher reaction times on average, displaying a mean reaction time of 1048 ms compared to 886 ms for L1 English participants. L2 English participants also showed a median reaction time over 100 ms longer than L1 English participants. The standard deviation measures also show a slightly larger spread of L2 English responses as compared to L1 English responses. For L2 English participants, RT minima and maxima were both larger than L1 English participants.
 
 ## Regression modelling
 
@@ -269,7 +329,8 @@ The model employs a maximal random effects model, including random slopes for ea
 my_seed = 4423
 
 rmdl_data_bm <- brm(
-  RT ~ group * rarity * color_noncolor + Length + (rarity + color_noncolor + Length | participant_num), 
+  RT ~ group * rarity * color_noncolor + Length + 
+    (rarity + color_noncolor + Length | participant_num), 
   data = rmdl_data_RT,
   family = lognormal,
   iter = 4000,
@@ -291,18 +352,25 @@ summary(rmdl_data_bm, prob = 0.95)
 ```{r}
 rmdl_data_bm_draws <- as_draws_df(rmdl_data_bm)
 
-# Now, following the QML textbook lesson 35, we transform the predictors relative relationships into combined values
+# Now, following the QML textbook lesson 35, 
+#we transform the predictors relative relationships into combined values
 rmdl_data_bm_draws_combined <- rmdl_data_bm_draws %>% mutate(
   eng_common_color = b_Intercept,
   mand_common_color = b_Intercept + b_groupMandarin,
   eng_rare_color = b_Intercept + b_rarityrare,
   eng_common_noncolor = b_Intercept + b_color_noncolornoncolor,
   mand_rare_color = b_Intercept + b_rarityrare + `b_groupMandarin:rarityrare`,
-  mand_common_noncolor = b_Intercept + b_color_noncolornoncolor + `b_groupMandarin:color_noncolornoncolor`,
-  eng_rare_noncolor = b_Intercept + b_rarityrare + `b_rarityrare:color_noncolornoncolor`,
-  mand_rare_noncolor = b_Intercept + b_groupMandarin + b_rarityrare + `b_rarityrare:color_noncolornoncolor` + `b_groupMandarin:rarityrare:color_noncolornoncolor`,
+  mand_common_noncolor = b_Intercept + b_color_noncolornoncolor +
+    `b_groupMandarin:color_noncolornoncolor`,
+  eng_rare_noncolor = b_Intercept + b_rarityrare 
+  + `b_rarityrare:color_noncolornoncolor`,
+  mand_rare_noncolor = b_Intercept + b_groupMandarin + b_rarityrare 
+  + `b_rarityrare:color_noncolornoncolor` 
+  + `b_groupMandarin:rarityrare:color_noncolornoncolor`,
 ) %>%
-  select(eng_common_color, mand_common_color, eng_rare_color, eng_common_noncolor, mand_rare_color, mand_common_noncolor, eng_rare_noncolor, mand_rare_noncolor)
+  select(eng_common_color, mand_common_color, eng_rare_color, 
+         eng_common_noncolor, mand_rare_color, mand_common_noncolor,
+         eng_rare_noncolor, mand_rare_noncolor)
 ```
 
 Now, we can look at the relevant variables described in Methods to address the research hypothesis.
@@ -316,7 +384,10 @@ I am using the QML textbook Chapter 35 instructions to create a plot to assess t
 ```{r}
 draws_combined_epred_H1 <- rmdl_data_bm_draws_combined %>%
   select(eng_common_color, eng_common_noncolor) %>%
-  pivot_longer(eng_common_color:eng_common_noncolor, names_to = "cond", values_to = "epred") %>%
+  pivot_longer(
+    eng_common_color:eng_common_noncolor, 
+    names_to = "cond", 
+    values_to = "epred") %>%
   mutate(
     cond = case_when(
       cond == "eng_common_color" ~ "Common Color",
@@ -331,9 +402,11 @@ H1_epreds_plot <- draws_combined_epred_H1 %>%
     aes(fill = after_stat(level))
   ) + 
   theme(axis.text.y = element_text(angle = 45, hjust = 1)) +
-  scale_fill_brewer(na.translate = FALSE, name="Credible Intervals", labels = c("95%", "80%", "50%")) + 
+  scale_fill_brewer(
+    name="Credible Intervals", 
+    labels = c("95%", "80%", "50%")) + 
   labs(
-    title="Expected Log-RT Reaction Time Predictions for English L1 Speakers", 
+    title="Expected Log-RT Reaction Time Predictions for English L1 Speakers",
     subtitle="Common Color and Noncolor Word Condition", 
     x="Predicted Reaction Times (Log-RTs)", 
     y="Condition")
@@ -350,7 +423,10 @@ For hypothesis 1b, L1 reaction times should not be credibly different between th
 ```{r}
 draws_combined_epred_H2 <- rmdl_data_bm_draws_combined %>%
   select(eng_common_color, eng_rare_color) %>%
-  pivot_longer(eng_common_color:eng_rare_color, names_to = "cond", values_to = "epred") %>%
+  pivot_longer(
+    eng_common_color:eng_rare_color, 
+    names_to = "cond", 
+    values_to = "epred") %>%
   mutate(
     cond = case_when(
       cond == "eng_common_color" ~ "Common Color",
@@ -366,8 +442,14 @@ H2_epreds_plot <- draws_combined_epred_H2 %>%
     aes(fill = after_stat(level))
   ) + 
   theme(axis.text.y = element_text(angle = 45, hjust = 1)) +
-  scale_fill_brewer(na.translate = FALSE, name="Credible Intervals", labels = c("95%", "80%", "50%")) + 
-  labs(title="Expected Log-RT Reaction Time Predictions for English L1 Speakers", subtitle="Between Rare and Common Color Words",x="Predicted Reaction Times (Log-RTs)", y="Condition")
+  scale_fill_brewer(
+    name="Credible Intervals", 
+    labels = c("95%", "80%", "50%")) + 
+  labs(
+    title="Expected Log-RT Reaction Time Predictions for English L1 Speakers",
+    subtitle="Between Rare and Common Color Words",
+    x="Predicted Reaction Times (Log-RTs)", 
+    y="Condition")
 
 H2_epreds_plot
 
@@ -381,12 +463,18 @@ For Hypothesis 2a, I assess the expected predictions for all L2 color responses 
 ```{r}
 draws_combined_epred_H3 <- rmdl_data_bm_draws_combined %>%
   select(eng_common_color, mand_common_color, eng_rare_color, mand_rare_color) %>%
-  pivot_longer(eng_common_color:mand_rare_color, names_to = "cond", values_to = "epred") %>%
-  #Combining all color responses while keeping L1 and L2 separate to compare color responses between groups
+  pivot_longer(
+    eng_common_color:mand_rare_color, 
+    names_to = "cond", 
+    values_to = "epred") %>%
+  #Combining all color responses while keeping L1 and L2 separate
+  #to compare color responses between groups
   mutate(
     cond = case_when(
-      cond == "eng_common_color" | cond == "eng_rare_color" ~ "L1 English, Color Word",
-      cond == "mand_common_color" | cond == "mand_rare_color" ~ "L2 English, Color Word",
+      cond == "eng_common_color" | cond == "eng_rare_color" 
+      ~ "L1 English, Color Word",
+      cond == "mand_common_color" | cond == "mand_rare_color" 
+      ~ "L2 English, Color Word",
       TRUE ~ "" #Catch-all, should not ever be used if everything is working
     )
   )
@@ -398,8 +486,15 @@ H3_epreds_plot <- draws_combined_epred_H3 %>%
     aes(fill = after_stat(level))
   ) + 
   theme(axis.text.y = element_text(angle = 45, hjust = 1)) +
-  scale_fill_brewer(na.translate = FALSE, name="Credible Intervals", labels = c("95%", "80%", "50%")) + 
-  labs(title="Expected Log-RT Reaction Time Predictions for English L1 Speakers", subtitle="Between Rare and Common Color Words",x="Predicted Reaction Times (Log-RTs)", y="Condition")
+  scale_fill_brewer(
+    name="Credible Intervals", 
+    labels = c("95%", "80%", "50%")) +
+  labs(
+    title="Expected Log-RT Reaction Time Predictions 
+    for English L1 Speakers",
+    subtitle="Between Rare and Common Color Words",
+    x="Predicted Reaction Times (Log-RTs)",
+    y="Condition")
 
 H3_epreds_plot
 
@@ -413,7 +508,10 @@ Now we look at the statistical average differences between rare and common color
 ```{r}
 draws_combined_epred_H4 <- rmdl_data_bm_draws_combined %>%
   select(eng_common_color, mand_common_color, eng_rare_color, mand_rare_color) %>%
-  pivot_longer(eng_common_color:mand_rare_color, names_to = "cond", values_to = "epred") %>%
+  pivot_longer(
+    eng_common_color:mand_rare_color, 
+    names_to = "cond", 
+    values_to = "epred") %>%
   separate(cond, c("Language","Rarity")) %>%
   #Simple mutate to rename for plot Y axis labels
   mutate(
@@ -427,14 +525,36 @@ draws_combined_epred_H4 <- rmdl_data_bm_draws_combined %>%
 draws_combined_epred_H4 %>%
   ggplot(aes(epred, Rarity, fill=Language)) +
   stat_halfeye(alpha=0.75) + 
-  scale_fill_manual(labels = c("English L1", "English L2"), values = c("orchid2", "seagreen")) +
+  scale_fill_manual(
+    labels = c("English L1", "English L2"), 
+    values = c("orchid2", "seagreen")) +
   theme(axis.text.y = element_text(angle = 45, hjust = 1)) +
-  labs(title="Expected Log-RT Reaction Time Predictions for English L1 and L2 Speakers", subtitle="Between Rare and Common Color Words",x="Predicted Reaction Times (Log-RTs)", y="Condition")
+  labs(
+    title="Expected Log-RT Reaction Time Predictions, English L1 and L2 Speakers",
+    subtitle="Between Rare and Common Color Words",
+    x="Predicted Reaction Times (Log-RTs)",
+    y="Condition")
 ```
 
 ## Discussion
 
-*Report the results of the model. Write a brief discussion of the your model results in light of the research question.*
+As shown by the model summary, the 95% credible interval for all predictors crossed 0. In other words, at 95% credibility, the model had no confidence in effect magnitude or direction.
+
+These findings bear upon the hypotheses laid out in the Methods section of the report.
+
+#### Hypothesis 1
+
+The results of this study, do not replicate the Stroop effect. At 95% credibility, there was no statistical difference in L1 English reaction times between color and non-color stimulus items in naming the stimulus font color.
+
+Even so, L1 English participants did not have credibly longer or shorter reaction times between the common and rare color stimulus items in the study. While this finding aligns with the hypothesis laid out in the Methods section above, this result should be treated with caution; given that the study failed to replicate the Stroop effect, this result does not provide insight into automatic semantic inhibition based on word frequency among L1 speakers of English.
+
+#### Hypothesis 2
+
+2a. Compared to the L1 group, L2 (Non-native) English speakers will respond to all color items more quickly overall due to lower lexical entrenchment and thus less semantic interference when naming font colors.
+
+As shown by the raw data summary, the prediction of hypothesis 2a that L2 English speakers would respond to all color words more quickly than L1 English speakers was not borne out by the results of this study. On average, L2 English responses were globally slower across all conditions. However, the statistical model did not find this difference credible at the 95% CrI, and therefore, there is no evidence from this study that L2 English speakers reliably respond differently than L1 English speakers to color words in the Stroop task paradigm.
+
+Additionally, the statistical model's prediction for the interaction between L2 English speakers and word frequency (rarity) also crossed 0. This means that, at 95% credibility, we are not confident that high and low frequency English words change L2 English speakers' reaction times any differently than for L1 English speakers. This lack of confidence is shown clearly in Figure 8, where Log-RTs for both language groups overlap heavily.
 
 ### Limitations
 
@@ -488,8 +608,9 @@ word_df_final %>%
   select(string, rarity, color_noncolor, Zipf.SUBTLEX_UK, Length) %>%
   knitr::kable(
     digits = 2,
-    col.names = c("Word", "Rarity", "Color or Noncolor", "SUBTLEX Zipf Score (UK)", "Length in Letters")
-  ) %>% kable_styling()
+    col.names = c("Word", "Rarity", "Color or Noncolor", 
+                  "SUBTLEX Zipf Score (UK)", "Length in Letters")
+  ) %>% kable_styling(full_width = F)
 
 write_csv(word_df_final, "testable_materials/exp_stimuli.csv")
 ```
@@ -500,8 +621,11 @@ write_csv(word_df_final, "testable_materials/exp_stimuli.csv")
 survey_responses %>%
   knitr::kable(
     digits = 2,
-    col.names = c("Participant ID", "English Proficiency", "Standard Mandarin Proficiency", "Other Languages")
-  ) %>% kable_styling()
+    col.names = c("Participant ID", "English Proficiency", 
+                  "Mandarin Proficiency", "Other Languages")
+  ) %>% kable_styling(full_width = F)
+
+survey_responses
 ```
 
 ### C. Building the Testable file
@@ -526,8 +650,10 @@ Now, let's finalize the Testable trial file to label conditions as "congruent" (
 ```{r}
 exp_trialfile <- exp_trialfile %>% mutate(
   congruence_condition = case_when(
-    color_noncolor == "color" & rarity == "common" & paste0("stim1: ", string) == color ~ "congruent",
-    color_noncolor == "color" & rarity == "common" & paste0("stim1: ", string) != color ~ "incongruent",
+    color_noncolor == "color" 
+    & rarity == "common" & paste0("stim1: ", string) == color ~ "congruent",
+    color_noncolor == "color" 
+    & rarity == "common" & paste0("stim1: ", string) != color ~ "incongruent",
     TRUE ~ "control"
   )
 )
@@ -566,7 +692,8 @@ head_block1 <- tibble(
   random = 1,
   required = "",
   title = "Welcome to the experiment",
-  content = "First, we'd like to collect some information about your language background. Please click NEXT and answer the questions on the form.",
+  content = "First, we'd like to collect some information about your language
+  background. Please click NEXT and answer the questions on the form.",
   head = "",
   responseType = ""
 )
@@ -591,7 +718,11 @@ head_block2 <- tibble(
   responseType = "radio",
   required = "1",
   head = "What is your English language READING ability?",
-  responseOptions = "Native Speaker;High Proficiency (CEFR C1-C2);Intermediate Proficiency (CEFR B1-B2);Low Proficiency (CEFR A1-A2);No proficiency:exclusive"
+  responseOptions = "Native Speaker;
+  High Proficiency (CEFR C1-C2);
+  Intermediate Proficiency (CEFR B1-B2);
+  Low Proficiency (CEFR A1-A2);
+  No proficiency:exclusive"
 )
 
 #Mandarin Proficiency Check Row
@@ -614,7 +745,11 @@ head_block3 <- tibble(
   responseType = "radio",
   required = "1",
   head = "What is your Standard Mandarin (普通话) language READING ability?",
-  responseOptions = "Native Speaker;High Proficiency (CEFR C1-C2);Intermediate Proficiency (CEFR B1-B2);Low Proficiency (CEFR A1-A2);No proficiency:exclusive"
+  responseOptions = "Native Speaker;
+  High Proficiency (CEFR C1-C2);
+  Intermediate Proficiency (CEFR B1-B2);
+  Low Proficiency (CEFR A1-A2);\
+  No proficiency:exclusive"
 )
 
 head_block4 <- tibble(
@@ -635,7 +770,8 @@ head_block4 <- tibble(
   content = "",
   responseType = "box",
   required = "",
-  head = "Are you proficient in or learning any other foreign languages? (Please include the name of the language and your proficiency self-assessment.)",
+  head = "Are you proficient in or learning any other foreign languages? 
+  (Please include the name of the language and your proficiency self-assessment.)",
   responseOptions = ""
 )
 
@@ -655,10 +791,15 @@ head_block5 <- tibble(
   random = 5,
   required = "",
   title = "Thank you for your survey responses! ",
-  content = "Let's move on to the experiment. \nIn this study, you are asked to indicate the FONT COLOR of the text, ignoring the meaning of the word. Please use the keyboard keys 1, 2, 3, and 4 to indicate the FONT COLOR of the word presented on the screen:<br><br>
-Press 1 for BLACK, <br>2 for <span style=\"color:blue;\">BLUE</span>, <br>3 for <span style=\"color:green;\">GREEN</span>, and <br>4 for <span style=\"color:brown;\">BROWN</span> <br><br>
-
-Please answer as accurately and as quickly as possible. Let's do some practice!",
+  content = "Let's move on to the experiment. 
+  \nIn this study, you are asked to indicate the FONT COLOR of the text, 
+  ignoring the meaning of the word. Please use the keyboard keys 1, 2, 3, and 4 
+  to indicate the FONT COLOR of the word presented on the screen:<br><br>
+  Press 1 for BLACK, <br>2 for <span style=\"color:blue;\">BLUE</span>,
+  <br>3 for <span style=\"color:green;\">GREEN</span>, and <br>4 for 
+  <span style=\"color:brown;\">BROWN</span> <br><br>
+  Please answer as accurately and as quickly as possible. 
+  Let's do some practice!",
   head = "",
   responseType = ""
 )
@@ -678,7 +819,10 @@ practice_block <- tribble(
   mutate(
     type = "test",
     condition1 = "practice",
-    feedback = glue::glue('correct: Correct! You responded in %RT% ms ; incorrect: Incorrect! The font color was {toupper(substring(color, 7))}. You responded in %RT% ms'),
+    feedback = glue::glue('correct: Correct! You responded in %RT% ms ; 
+                          incorrect: Incorrect! The font color was 
+                          {toupper(substring(color, 7))}. 
+                          You responded in %RT% ms'),
     stimFormat = "word",
     ITI = 400,
     keyboard = "1 2 3 4",
@@ -686,7 +830,9 @@ practice_block <- tribble(
     required = "",
     title = "",
     content = "",
-    trialText = "Press 1 for BLACK, <br>2 for <span style=\"color:blue;\">BLUE</span>, <br>3 for <span style=\"color:green;\">GREEN</span>, and <br>4 for <span style=\"color:brown;\">BROWN</span>",
+    trialText = "Press 1 for BLACK, <br>2 for <span style=\"color:blue;\">BLUE
+    </span>, <br>3 for <span style=\"color:green;\">GREEN</span>,
+    and <br>4 for <span style=\"color:brown;\">BROWN</span>",
     button1 = "",
     head = "",
     responseType = ""
@@ -708,7 +854,9 @@ head_block6 <- tibble(
   random = 7,
   required = "",
   title = "Ready to start?",
-  content = "Remember: Press 1 for BLACK, <br>2 for <span style=\"color:blue;\">BLUE</span>, <br>3 for <span style=\"color:green;\">GREEN</span>, and <br>4 for <span style=\"color:brown;\">BROWN</span>",
+  content = "Remember: Press 1 for BLACK, <br>2 for <span style=\"color:blue;\">BLUE
+  </span>, <br>3 for <span style=\"color:green;\">GREEN</span>,
+  and <br>4 for <span style=\"color:brown;\">BROWN</span>",
   head = "",
   responseType = ""
 )
@@ -726,7 +874,10 @@ exp_trialfile_main <- exp_trialfile %>% mutate(
   ),
   condition2 = congruence_condition,
   trialText = case_when(
-    type != "instructions" ~ "Press 1 for BLACK, <br>2 for <span style=\"color:blue;\">BLUE</span>, <br>3 for <span style=\"color:green;\">GREEN</span>, and <br>4 for <span style=\"color:brown;\">BROWN</span>",
+    type != "instructions" ~ "Press 1 for BLACK, <br>2 for 
+    <span style=\"color:blue;\">BLUE</span>, <br>3 for 
+    <span style=\"color:green;\">GREEN</span>, 
+    and <br>4 for <span style=\"color:brown;\">BROWN</span>",
     TRUE ~ ""
   ),
   feedback = "",
@@ -758,8 +909,11 @@ exp_trialfile_main <- exp_trialfile %>% mutate(
 Now let's save it for use in Testable.
 
 ```{r}
-exp_trialfile_final <- bind_rows(head_block1, head_block2, head_block3, head_block4, head_block5, practice_block, head_block6, exp_trialfile_main) %>%
+exp_trialfile_final <- bind_rows(
+  head_block1, head_block2, head_block3, head_block4, head_block5, 
+  practice_block, head_block6, exp_trialfile_main) %>%
   mutate(stimSize = "175%")
+  #This just makes the main word on the screen bigger for participants.
 
 write_csv(exp_trialfile_final, "testable_materials/exp_trialfile.csv")
 ```
