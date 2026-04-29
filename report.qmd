@@ -13,9 +13,9 @@ format:
 
 ## Background
 
-In English, word frequency is among the most important predictors of lexical recognition reaction times, accounting for substantial variance beyond other word features (Brysbaert et al, 2011). However, word frequency facilitation of lexical recognition is not uniform among speaker populations of a language. Diependaele et al (2013) found that the word frequency facilitation effect was much steeper in L2 English speakers than native speakers. Diependaele et al describes this asymmetry with the Lexical Entrenchment Account, which predicts that L2 speakers have weaker lexical representations for low-frequency words, while native speakers maintain relatively stronger representations of low-frequency words in the lexicon. Under this account, L2 speakers show longer reaction times on average due to weaker lexical entrenchment. However, for L2 speakers, increases in word frequency lead to proportionally greater facilitation of lexical recognition than for native speakers. This finding has been replicated in lexical decision tasks in Brysbaert et al (2017), which found that the frequency and language group interaction described above disappeared when controlling for vocabulary size, suggesting that it is lexical entrenchment, and not simply L2 status, that drives the asymmetry.
+In English, word frequency is among the most important predictors of lexical recognition reaction times, accounting for substantial variance beyond other word features [@brysbaert_visual_2017]. However, word frequency facilitation of lexical recognition is not uniform among speaker populations of a language. @diependaele_word_2013 found that the word frequency facilitation effect was much steeper in L2 English speakers than native speakers. Diependaele et al describe this asymmetry with the Lexical Entrenchment Account, which predicts that L2 speakers have weaker lexical representations for low-frequency words, while native speakers maintain relatively stronger representations of low-frequency words in the lexicon. Under this account, L2 speakers show longer reaction times on average due to weaker lexical entrenchment. However, for L2 speakers, increases in word frequency lead to proportionally greater facilitation of lexical recognition than for native speakers. This finding has been replicated in lexical decision tasks in @brysbaert_visual_2017, which found that the frequency and language group interaction described above disappeared when controlling for vocabulary size, suggesting that it is lexical entrenchment, and not simply L2 status, that drives the asymmetry.
 
-While the asymmetric relationship between word frequency and word recognition reaction times between L1 and L2 speakers has been studied under the Lexical Entrenchment Account, the theory's application to semantic representations of the word forms is less clear. The Stroop paradigm assesses participants' ability to "inhibit cognitive interference that occurs when the processing of a specific stimulus feature \[lexical orthography\] impedes the simultaneous processing of a second stimulus attribute \[color\]," causing a reaction time delay to conflicting orthographic-color pairs as the semantic activation of the written word conflicts with the font color itself (Scarpina & Tagini, 2017; Stroop, 1935). Therfore, whereas Diependale et al (2013) and Brysbaert et al (2017) investigated lexical recognition, this study seeks to better understand the relationship between word frequency effects and automatic semantic interference between L1 and L2 English speakers through the Stroop task paradigm.
+While the asymmetric relationship between word frequency and word recognition reaction times between L1 and L2 speakers has been studied under the Lexical Entrenchment Account, the theory's application to semantic representations of the word forms is less clear. The Stroop paradigm assesses participants' ability to "inhibit cognitive interference that occurs when the processing of a specific stimulus feature \[lexical orthography\] impedes the simultaneous processing of a second stimulus attribute \[color\]," causing a reaction time delay to conflicting orthographic-color pairs as the semantic activation of the written word conflicts with the font color itself [@scarpina_stroop_2017; @stroop_studies_1935]. Therefore, whereas @diependaele_word_2013 and @brysbaert_visual_2017 investigated lexical recognition, this study seeks to better understand the relationship between word frequency effects and automatic semantic interference between L1 and L2 English speakers through the Stroop task paradigm.
 
 ### Research Questions
 
@@ -34,11 +34,11 @@ Following assumptions of the lexical entrenchment account,
 
 ## Methods
 
-In order to address the main research questions and hypothesis, this study uses a Stroop task paradigm (Stroop, 1935). Participants are presented with English color and non-color words of both high and low frequency, using Zipf score from the SUBTLEX UK database as a correlate of frequency. The stimuli set includes 16 words: 4 common colors, 4 rare colors, 4 common non-colors, and 4 rare non-colors. The non-color words are included as controls. A table including the total set of stimuli can be seen in Appendix A. The experiment varied all stimulus words using four font colors: black, blue, green, and brown, matching the common colors in the stimuli set. For the purposes of the Stroop task, common colors were judged as congruent and incongruent based on relation to the font color; all other stimuli types were judged as "control", as the congruence condition is not well defined.
+In order to address the main research questions and hypothesis, this study uses a Stroop task paradigm [@stroop_studies_1935]. Participants are presented with English color and non-color words of both high and low frequency, using Zipf score from the SUBTLEX UK database as a correlate of frequency. The stimuli set includes 16 words: 4 common colors, 4 rare colors, 4 common non-colors, and 4 rare non-colors. The non-color words are included as controls. A table including the total set of stimuli can be seen in Appendix A. The experiment varied all stimulus words using four font colors: black, blue, green, and brown, matching the common colors in the stimuli set. For the purposes of the Stroop task, common colors were judged as congruent and incongruent based on relation to the font color; all other stimuli types were judged as "control", as the congruence condition is not well defined.
 
 Given that this is a reading task, the current study controls for length of stimulus words in letters by balancing word length across categories. Stimuli were orthogonally matched. Both common and rare conditions contain an identical distribution of word lengths, ranging from three to six letters with a mean length of 4.75 letters for color terms and 4.0 letters for non-color controls.
 
-Stimuli were categorized into the “common” or “rare” condition based on their score on the Zipf scale from 1-7. These values were taken from the SUBTLEX Zipf (UK) data provided by the LexOPS dataset from Taylor et al (2020). All “common” stimulus items are Zipf scale value 4.8 or above, whereas all “rare” stimulus items are Zipf scale value 3.0 or below.
+Stimuli were categorized into the “common” or “rare” condition based on their score on the Zipf scale from 1-7. These values were taken from the SUBTLEX Zipf (UK) data provided by the LexOPS dataset from @taylor_lexops_2020. All “common” stimulus items are Zipf scale value 4.8 or above, whereas all “rare” stimulus items are Zipf scale value 3.0 or below.
 
 In total, seven people participated in the experiment. Three were native Standard Mandarin speakers, while four were native English speakers.
 
@@ -64,7 +64,7 @@ Following this, eight practice trials were presented to the participant with two
 
 Since this study investigates the difference in the inhibitory Stroop effect when color word and font color are in conflict, all "congruent" trials where the color word matched font color in common words were dropped from the data.
 
-As advocated in Barr et al (2013), this study employs a maximal random effects structure to analyze experiment data, using a Bayesian linear random effects model from the `brms` package in R to assess the difference in frequency effects between English L1 and L2 participants:
+As advocated in @barr_random_2013, this study employs a maximal random effects structure to analyze experiment data, using a Bayesian linear random effects model from the `brms` package in R to assess the difference in frequency effects between English L1 and L2 participants:
 
 $Reaction \space Time \sim Language \space Group \space * \space Common\_Rare \space * \space Color\_Noncolor \space + \space Word \space Length \space + \\ (Common\_Rare \space + \space Color\_Noncolor \space + \space Length \space | \space Participant)$
 
@@ -359,14 +359,18 @@ rmdl_data_bm_draws_combined <- rmdl_data_bm_draws %>% mutate(
   mand_common_color = b_Intercept + b_groupMandarin,
   eng_rare_color = b_Intercept + b_rarityrare,
   eng_common_noncolor = b_Intercept + b_color_noncolornoncolor,
-  mand_rare_color = b_Intercept + b_rarityrare + `b_groupMandarin:rarityrare`,
-  mand_common_noncolor = b_Intercept + b_color_noncolornoncolor +
-    `b_groupMandarin:color_noncolornoncolor`,
-  eng_rare_noncolor = b_Intercept + b_rarityrare 
-  + `b_rarityrare:color_noncolornoncolor`,
-  mand_rare_noncolor = b_Intercept + b_groupMandarin + b_rarityrare 
-  + `b_rarityrare:color_noncolornoncolor` 
-  + `b_groupMandarin:rarityrare:color_noncolornoncolor`,
+  mand_rare_color = b_Intercept + b_groupMandarin +
+    b_rarityrare + `b_groupMandarin:rarityrare`,
+  mand_common_noncolor = b_Intercept + b_groupMandarin + 
+    b_color_noncolornoncolor + `b_groupMandarin:color_noncolornoncolor`,
+  eng_rare_noncolor = b_Intercept + b_rarityrare +
+  `b_rarityrare:color_noncolornoncolor`,
+  mand_rare_noncolor = b_Intercept + b_groupMandarin + b_rarityrare +
+  b_color_noncolornoncolor +
+  `b_groupMandarin:rarityrare` +
+  `b_rarityrare:color_noncolornoncolor` +
+  `b_groupMandarin:color_noncolornoncolor` +
+  `b_groupMandarin:rarityrare:color_noncolornoncolor`,
 ) %>%
   select(eng_common_color, mand_common_color, eng_rare_color, 
          eng_common_noncolor, mand_rare_color, mand_common_noncolor,
@@ -463,21 +467,17 @@ For Hypothesis 2a, I assess the expected predictions for all L2 color responses 
 ```{r}
 draws_combined_epred_H3 <- rmdl_data_bm_draws_combined %>%
   select(eng_common_color, mand_common_color, eng_rare_color, mand_rare_color) %>%
-  pivot_longer(
-    eng_common_color:mand_rare_color, 
-    names_to = "cond", 
-    values_to = "epred") %>%
-  #Combining all color responses while keeping L1 and L2 separate
-  #to compare color responses between groups
+  #Combining all color responses by averaging 
+  #while keeping L1 and L2 separate to compare color responses between groups
   mutate(
-    cond = case_when(
-      cond == "eng_common_color" | cond == "eng_rare_color" 
-      ~ "L1 English, Color Word",
-      cond == "mand_common_color" | cond == "mand_rare_color" 
-      ~ "L2 English, Color Word",
-      TRUE ~ "" #Catch-all, should not ever be used if everything is working
-    )
-  )
+    L1_English = (eng_common_color + eng_rare_color) / 2,
+    L2_English = (mand_common_color + mand_rare_color) / 2
+  ) %>%
+  pivot_longer(
+    L1_English:L2_English, 
+    names_to = "cond", 
+    values_to = "epred")
+
 
 H3_epreds_plot <- draws_combined_epred_H3 %>%
   ggplot(aes(epred, cond)) +
@@ -491,8 +491,8 @@ H3_epreds_plot <- draws_combined_epred_H3 %>%
     labels = c("95%", "80%", "50%")) +
   labs(
     title="Expected Log-RT Reaction Time Predictions 
-    for English L1 Speakers",
-    subtitle="Between Rare and Common Color Words",
+    for English L1 and L2 Speakers",
+    subtitle="Including Rare and Common Color Words",
     x="Predicted Reaction Times (Log-RTs)",
     y="Condition")
 
@@ -544,23 +544,27 @@ These findings bear upon the hypotheses laid out in the Methods section of the r
 
 #### Hypothesis 1
 
-The results of this study, do not replicate the Stroop effect. At 95% credibility, there was no statistical difference in L1 English reaction times between color and non-color stimulus items in naming the stimulus font color.
+The results of this study do not replicate the Stroop effect. At 95% credibility, there was no statistical difference in L1 English reaction times between color and non-color stimulus items in naming the stimulus font color.
 
 Even so, L1 English participants did not have credibly longer or shorter reaction times between the common and rare color stimulus items in the study. While this finding aligns with the hypothesis laid out in the Methods section above, this result should be treated with caution; given that the study failed to replicate the Stroop effect, this result does not provide insight into automatic semantic inhibition based on word frequency among L1 speakers of English.
 
 #### Hypothesis 2
 
-2a. Compared to the L1 group, L2 (Non-native) English speakers will respond to all color items more quickly overall due to lower lexical entrenchment and thus less semantic interference when naming font colors.
+Compared to the L1 group, L2 (Non-native) English speakers will respond to all color items more quickly overall due to lower lexical entrenchment and thus less semantic interference when naming font colors.
 
 As shown by the raw data summary, the prediction of hypothesis 2a that L2 English speakers would respond to all color words more quickly than L1 English speakers was not borne out by the results of this study. On average, L2 English responses were globally slower across all conditions. However, the statistical model did not find this difference credible at the 95% CrI, and therefore, there is no evidence from this study that L2 English speakers reliably respond differently than L1 English speakers to color words in the Stroop task paradigm.
 
 Additionally, the statistical model's prediction for the interaction between L2 English speakers and word frequency (rarity) also crossed 0. This means that, at 95% credibility, we are not confident that high and low frequency English words change L2 English speakers' reaction times any differently than for L1 English speakers. This lack of confidence is shown clearly in Figure 8, where Log-RTs for both language groups overlap heavily.
 
-### Limitations
-
 Among the hypothesis set out in this study, the evidence does not credibly bear on any of them. Further studies should be conducted with more participants to better understand the relationship between the Stroop effect and word frequency. While past studies have argued for a robust relationship between lexical decision tasks and word frequency in both L1 and L2 English populations, based on our results, we cannot make any claims as to the relationship between incongruous word-color naming and word frequency in the Stroop paradigm in either population.
 
+### Limitations
+
 For the rare color word condition, this study used four rare color words unrelated to the font colors employed in the experiment. This is a severe limitation of the study, as it means that a congruous condition in rare color words is never observed by participants. Future studies should include length-matched rare and common words referring to the same font color to better explore this research question.
+
+## Bibliography
+
+<div id="refs"></div>
 
 ## Appendix
 
@@ -919,3 +923,4 @@ exp_trialfile_final <- bind_rows(
 
 write_csv(exp_trialfile_final, "testable_materials/exp_trialfile.csv")
 ```
+
