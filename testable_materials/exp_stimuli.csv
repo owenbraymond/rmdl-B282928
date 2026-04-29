@@ -1,0 +1,17 @@
+string,rarity,color_noncolor,Zipf.SUBTLEX_UK,Length,combined_condition
+green,common,color,5.22,5,common_color
+brown,common,color,5.01,5,common_color
+blue,common,color,5.16,4,common_color
+black,common,color,5.26,5,common_color
+sepia,rare,color,2.38,5,rare_color
+ochre,rare,color,2.77,5,rare_color
+mauve,rare,color,2.71,5,rare_color
+aqua,rare,color,2.98,4,rare_color
+fast,common,noncolor,5.09,4,common_noncolor
+slow,common,noncolor,4.81,4,common_noncolor
+big,common,noncolor,5.94,3,common_noncolor
+small,common,noncolor,5.43,5,common_noncolor
+apex,rare,noncolor,2.96,4,rare_noncolor
+tusk,rare,noncolor,3,4,rare_noncolor
+nymph,rare,noncolor,2.72,5,rare_noncolor
+irk,rare,noncolor,1.95,3,rare_noncolor

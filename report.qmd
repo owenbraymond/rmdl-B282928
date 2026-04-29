@@ -17,22 +17,20 @@ While the asymmetric relationship between word frequency and word recognition re
 
 The Lexical Entrenchment Account predicts lower lexical entrenchment for L2 speakers of English overall, and a greater relative difference in entrenchment between frequent and infrequent English words.
 
-1.  Does reduced lexical entrenchment for infrequent words in L2 speakers lead to a reduction in automatic semantic activation as seen through the Stroop effect?
-2.  Word frequency has been observed to have an asymmetric impact between L1 and L2 speakers' lexical decision reaction times. Is a similar relationship observed between word frequency and automatic semantic interference in the Stroop effect?
+- Does reduced lexical entrenchment for infrequent words in L2 speakers lead to a reduction in automatic semantic activation as seen through the Stroop effect?
+
+- Word frequency has been observed to have an asymmetric impact between L1 and L2 speakers' lexical decision reaction times. Is a similar relationship observed between word frequency and automatic semantic interference in the Stroop effect?
 
 ### Research Hypotheses
 
 Following assumptions of the lexical entrenchment account,
 
-- I predict that L1 speakers of English will have similar lexical entrenchment for infrequent (rare) and frequent (common) word colors. This will lead to credibly longer reaction times between the color and non-color words, demonstrating the Stroop effect, but reaction times between rare and common collors will not be credibly statistically different.
-
-- On the other hand, L2 English speakers will have much lower lexical entrenchment for rare words in English, leading to reduced automatic semantic interference during the Stroop task. Thus, L2 participants will respond more quickly overall, and will display a credibly greater difference in reaction times between rare and common words due to the greater difference in lexical entrenchment between the two conditions as compared to L1 speakers.
+1.  I predict that L1 speakers of English will have similar lexical entrenchment for infrequent (rare) and frequent (common) word colors. This will lead to credibly longer reaction times between the color and non-color words, demonstrating the Stroop effect, but reaction times between rare and common collors will not be credibly statistically different.
+2.  On the other hand, L2 English speakers will have much lower lexical entrenchment for rare words in English, leading to reduced automatic semantic interference during the Stroop task. Thus, L2 participants will respond more quickly overall, and will display a credibly greater difference in reaction times between rare and common words due to the greater difference in lexical entrenchment between the two conditions as compared to L1 speakers.
 
 ## Methods
 
-*Briefly report the methods of the study (participants, materials, procedure, statistical analysis...). Note that when discussing the statistical analysis you should clearly state how the analysis results will be used to assess the RQs/RHs (be as specific and precise as you can). **Include an Open Research/Data availability statement.***
-
-In order to address the main research questions and hypothesis, this study uses a Stroop task paradigm (Stroop, 1935). Participants are presented with English collor and non-color words of both high and low frequency, using Zipf score from the SUBTLEX UK database as a correlate of frequency. The stimuli set includes 16 words: 4 common colors, 4 rare colors, 4 common non-colors, and 4 rare non-colors. The non-color words are included as controls. A table including the total set of stimuli can be seen in Appendix A. The experiment varied all stimulus words using four font colors: black, blue, green, and brown, matching the common colors in the stimuli set. For the purposes of the Stroop task, common colors were judged as congruent and incongruent based on relation to the font color; all other stimuli types were judged as "control", as the congruence condition is not well defined.
+In order to address the main research questions and hypothesis, this study uses a Stroop task paradigm (Stroop, 1935). Participants are presented with English color and non-color words of both high and low frequency, using Zipf score from the SUBTLEX UK database as a correlate of frequency. The stimuli set includes 16 words: 4 common colors, 4 rare colors, 4 common non-colors, and 4 rare non-colors. The non-color words are included as controls. A table including the total set of stimuli can be seen in Appendix A. The experiment varied all stimulus words using four font colors: black, blue, green, and brown, matching the common colors in the stimuli set. For the purposes of the Stroop task, common colors were judged as congruent and incongruent based on relation to the font color; all other stimuli types were judged as "control", as the congruence condition is not well defined.
 
 Given that this is a reading task, the current study controls for length of stimulus words in letters by balancing word length across categories. Stimuli were orthogonally matched. Both common and rare conditions contain an identical distribution of word lengths, ranging from three to six letters with a mean length of 4.75 letters for color terms and 4.0 letters for non-color controls.
 
@@ -60,33 +58,45 @@ Following this, eight practice trials were presented to the participant with two
 
 ### Statistical Analysis
 
+Since this study investigates the difference in the inhibitory Stroop effect when color word and font color are in conflict, all "congruent" trials where the color word matched font color in common words were dropped from the data.
+
 As advocated in Barr et al (2013), this study employs a maximal random effects structure to analyze experiment data, using a Bayesian linear random effects model from the `brms` package in R to assess the difference in frequency effects between English L1 and L2 participants:
 
-$Reaction \space Time \sim Language \space Group \space * \space Common\_Rare \space * \space Color\_Noncolor \space + \space Word \space Length \space + \\ (Common\_Rare \space + \space Color\_Noncolor \space| \space Participant)$
+$Reaction \space Time \sim Language \space Group \space * \space Common\_Rare \space * \space Color\_Noncolor \space + \space Word \space Length \space + \\ (Common\_Rare \space + \space Color\_Noncolor \space + \space Length \space | \space Participant)$
 
 The primary dependent variable is reaction time, modeled using a LogNormal family. This structure explicitly models the interaction between group (L1 vs. L2), frequency of the stimulus word, and type (color word versus non-color word) and stimulus word length on reaction times, while controlling for word length's impact on reaction times. Given that all participants see multiple levels of word frequency and and type (color versus non-color word), these variables are included as random slopes.
 
-To address the research hypotheses, several model parameters are of interest.
+To address the research hypotheses, several data and model parameters are of interest.
 
-1.  L1 (Native) English speakers will have credibly longer reaction times in the color condition as compared to the non-color condition, replicating the Stroop effect.
+1a. L1 (Native) English speakers will have credibly longer reaction times in the common color condition as compared to the common non-color condition, replicating the Stroop effect.
 
-    - To evaluate this, we will look at the group
+- To evaluate this, I will look at the L1 group reaction times between common color words and common non-color words. If the Stroop effect is replicated, reaction time to name the font color should be credibly lower in the non-color word condition as compared to the color word condition.
 
-2.  L1 (Native) English speakers will **not** have credibly longer reaction times between rare and common items within the color condition.
+1b. L1 (Native) English speakers will **not** have credibly longer reaction times between rare and common items within the color condition.
 
-    - To evaluate this, we
+- To evaluate this, I look at L1 group reaction times between rare and common color words. If the lexical entrenchment account holds, reaction times from L1 English speakers between rare color words and common color words should not be credibly different.
 
-3.  Compared to the L1 group, L2 (Non-native) English speakers will respond to all color items more quickly overall due to lower lexical entrenchment and thus less semantic interference when naming font colors.
+2a. Compared to the L1 group, L2 (Non-native) English speakers will respond to all color items more quickly overall due to lower lexical entrenchment and thus less semantic interference when naming font colors.
 
-    - To assess this hypothesis,
+- To assess this hypothesis, we will aggregate color word responses across the common and rare condition between L1 English and L2 English speakers. If the hypothesis holds, L2 English speakers will respond more quickly to all color words.
 
-4.  Compared to the L1 group, L2 participants will demonstrate greater relative change in reaction times between rare and common items in the color condition, demonstrating the greater range of lexical entrenchment between the two levels of frequency.
+2b. Compared to the L1 group, L2 participants will demonstrate greater relative change in reaction times between rare and common items in the color condition, demonstrating the greater range of lexical entrenchment between the two levels of frequency.
 
-    - This hypothesis
+- To look at this part of the hypothesis, we will look at overall reaction times in the color condition for both L1 English and L2 English speakers, comparing between the rare and common conditions. If the hypothesis holds, the range between rare and common condition reaction times should be greater overall in the L2 English group.
+
+### Data Availability Statement
+
+All items relevant to the project are available on GitHub at [**https://github.com/owenbraymond/rmdl-B282928**](https://github.com/owenbraymond/rmdl-B282928).
+
+Anonymized participant experimental data used for this analysis can be found in the `/results/` folder of this repository.
+
+The stimuli used in the experiment are generated within this file in Appendix A and saved as a .csv in `testable_materials` in this repository.
+
+The Testable experiment file used to run the experiment is generated within this file in Appendix C and saved as a .csv in `testable_materials` in this repository. (This trial file is compatible with Testable as of April 29, 2026.)
 
 ## Data
 
-### Workspace Setup
+### Workspace Setup, Package loading
 
 ```{r}
 #| label: setup-packages
@@ -107,9 +117,7 @@ library(LexOPS)
 
 ### Read and process the data
 
-*Read the data here. If the data needs processing, like mutating columns or creating new ones, briefly explain why processing is needed and what you did*. *Include a description of each of the relevant columns in the data.*
-
-### Importing trial data
+#### Importing Trial Data
 
 First, I downloaded all participant experimental result files from Testable as individual .csv files and put them in my repository's "results" folder. I then used the `list.files()` function to create a list of all results files in the /results/ folder. using `lapply()`, I read all the .csv folders into individual tibbles within data_lst, skipping the first 3 rows which contained Testable metadata. I then used `bind_rows()` to combine all trial files into one tibble called `rmdl_data`, and wrote this into my repository's /data/ folder for use to any other interested researchers who want to start analysis with a combined results file.
 
@@ -124,12 +132,33 @@ data_lst <- lapply(files_to_read, function(x) {
   read_csv(x, skip = 3) #testable includes 3 rows at the top with metadata, skip these to get the main trial data
 })
 
-rmdl_data <- bind_rows(data_lst, .id = "participant_num")
+rmdl_data <- bind_rows(data_lst, .id = "participant_num") %>%
+  filter(condition2 != "congruent" | is.na(condition2)) #Since we are studying the inhibitory effect of word-color pairs, so we are only going to look at incongruent and control trials.
 
 write.csv(rmdl_data, "data/rmdl_data.csv")
 ```
 
-In the combined experimental data tibble, I used the `type` column to create two sub–tibbles, one for participant
+### Relevant Columns
+
+`participant_num` : Unique participant ID for each participant.
+
+`stim1` : The word text of the stimulus item.
+
+`color` : The font color of the stimulus item.
+
+`RT` : Participant reaction time to the stimulus item.
+
+`rarity` : Whether the stimulus item belongs to the "rare" or "common" condition.
+
+`color_noncolor` : Whether the stimulus item belongs to the "color" or "non-color" condition.
+
+`Length` : Stimulus item length in letters.
+
+`group` : Participant group, either "Mandarin" or "English", representing the participant's L1.
+
+### Splitting the Data
+
+In the combined experimental data tibble, I used the `type` column to create two sub–tibbles, one for participant language proficiency self-rating information (`survey_responses`), and one for the reaction time data to stimulus items (`rmdl_data_RT`).
 
 ```{r}
 survey_responses <- rmdl_data %>%
@@ -160,31 +189,67 @@ rmdl_data <- rmdl_data %>%
   )
 
 rmdl_data_RT <- rmdl_data %>%
+  #We will drop 
   filter(type == "test" & condition1 != "practice") %>%
   select(participant_num, type, stim1, color, key, condition1, condition2, RT, english_level, mandarin_level, other_level, rarity, color_noncolor, Zipf.SUBTLEX_UK, Length, combined_condition, congruence_condition, correct, group)
 ```
 
-### Plot the data
+### Plotting the data
 
-*Create relevant plots: for each, include a description of the plot (type, axes, colours used and so on) and a description of relevant patterns.*
-
-Visualizing main data patterns
+#### Figure 1.
 
 ```{r}
-rmdl_data_RT %>%
+#The code will print the figures, but you can find a saved vector graphic version in the 'figures' subfolder. 
+rawdata_violin <- rmdl_data_RT %>%
   ggplot(aes(x = english_level, y = RT, fill = english_level)) +
   geom_violin(alpha = 0.15) +
-  geom_jitter(width = 0.2, alpha = 0.3, size = 0.8) +
+  geom_jitter(width = 0.2, alpha = 0.6, size = 0.8) +
   facet_wrap(~rarity) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  labs(x = "English Level", y = "RT (ms)", title = "RT by L1/L2 status and colour rarity")
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none") +
+  labs(x = "English Level", y = "RT (ms)", title = "RT by L1/L2 status and color rarity", subtitle="Only color items considered")
+
+rawdata_violin
+
+ggsave("figures/rawdata_violin.svg")
 ```
 
-### Summarise the data
+Figure 1. This figure plots reaction times on the Y axis and groups English proficiency level of participants on the X axis, shown in red, green, and blue for visual clarity. This plot shows that while there was variation between group reaction times, patterns look fairly similar between the common and rare conditions overall.
 
-*Calculate and report appropriate summary measures for relevant variables in the data.*
+#### Figure 2.
 
-Describe the summary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+```{r}
+rawdata_L1_color_noncolor_condition <- rmdl_data_RT %>%
+  filter(group == "English") %>%
+  ggplot(aes(x = color_noncolor, y = RT, color=color_noncolor)) +
+  geom_jitter(width = 0.2, alpha = 0.6, size = 1.4) +
+  scale_color_brewer(name = "Color-Noncolor Condition", labels = c("Color", "Noncolor"), palette = "Set1", type = "div", guide="none") +
+  labs(x = "Color and Non-Color Condition", y = "RT (ms)", title = "RT by Color-Noncolor Condition for L1 English speakers", subtitle="Rare and common items considered")
+
+rawdata_L1_color_noncolor_condition
+
+ggsave("figures/rawdata_L1_color_noncolor_condition.svg")
+```
+
+Figure 2. This figure plots reaction times on the Y axis and the color-noncolor condition on the X axis. Only L1 English speakers are included in the plot, as this is a test of Hypothesis 1a; if L1 speakers of English are slower to respond to color words versus non-color words, there is evidence of replicating the Stroop effect. For visual clarity, color word items are shown in red and non-color word items are shown in blue. This plot indicates that L1 English speakers in this study may have had slightly slower reaction times to color words as compared to non-color words, but the robustness of this difference will be assessed in the statistical model.
+
+#### Figure 3.
+
+```{r}
+rawdata_L1_color_condition <- rmdl_data_RT %>%
+  filter(group == "English") %>%
+  ggplot(aes(x = Zipf.SUBTLEX_UK, y = RT, color=rarity)) +
+  geom_jitter(width = 0.2, alpha = 0.6, size = 1.4) +
+  scale_color_brewer(name = "Rarity Condition", labels = c("common", "rare"), palette = "Set1", type = "div") +
+  labs(x = "Zipf Score (SUBTLEX UK)", y = "RT (ms)", title = "RT by Zipf Score (SUBTLEX UK) for L1 English speakers", subtitle="Only color items considered")
+
+rawdata_L1_color_condition
+
+ggsave("figures/rawdata_L1_color_condition.svg")
+```
+
+Figure 3. This figure plots reaction times on the Y axis and Zipf score (SUBTLEX UK) as a correlate of rarity on the X axis. Only L1 English speakers are included in the plot, as this is a test of Hypothesis 1b; if L1 speakers of English have similar lexical entrenchment of rare and common color words, reaction times to both conditions should be similar. For visual clarity, common items are shown in red and rare items are shown in blue. This plot indicates that there may not be significantly different reaction times between common and rare colors among L1 speakers of English in this study.
+
+### Summarize the data
 
 ```{r}
  rmdl_data_RT %>%
@@ -194,24 +259,28 @@ Describe the summary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 ## Regression modelling
 
-*Write an explanation of the regression model(s) you will run to answer the chosen research question. Fit the model and get a model summary and relevant model plots. Report the results of the model.*
+To model this data, I chose a LogNormal family. Reaction time data is often right-skewed, meaning it has a long tail to the right. Modeling with a LogNormal family "squishes" the data, allowing the model to interpret it as if it were close to a Gaussian distribution.
+
+As for model parameters, this model explicitly seeks to understand the interaction between language group (L1 versus L2 English), stimulus item rarity (common versus rare), and color versus non-color word. This addresses the core hypotheses of the study, assessing L1 and L2 interactions with word frequency (rarity) and status as a color word. The model includes word length in letters to control for the reading effect that may be incurred from longer or shorter word length.
+
+The model employs a maximal random effects model, including random slopes for each participant for word rarity, color-noncolor status, and word length. These random slopes were chosen as these were the three within-participant conditions that all participants experienced at different levels.
 
 ```{r}
 my_seed = 4423
 
 rmdl_data_bm <- brm(
-  RT ~ group * rarity * color_noncolor + Length + (rarity + Length | participant_num), 
+  RT ~ group * rarity * color_noncolor + Length + (rarity + color_noncolor + Length | participant_num), 
   data = rmdl_data_RT,
   family = lognormal,
   iter = 4000,
   cores = 4,
   seed = my_seed,
-  file = "cache/rmdl_bm6",
+  file = "cache/rmdl_bm",
   control = list(adapt_delta = 0.99, max_treedepth = 15)
   )
 ```
 
-Summarize the model
+**Model Summary:**
 
 ```{r}
 summary(rmdl_data_bm, prob = 0.95)
@@ -238,59 +307,138 @@ rmdl_data_bm_draws_combined <- rmdl_data_bm_draws %>% mutate(
 
 Now, we can look at the relevant variables described in Methods to address the research hypothesis.
 
-#### 1. L1 Stroop Replication
+#### Figure 5. L1 Stroop Replication
 
-For this hypothesis, L1 reaction times in the color condition should be credibly slower than in the noncolor condition, regardless of rarity.
+For hypothesis 1a, L1 reaction times in the color condition should be credibly slower than in the noncolor condition, regardless of rarity.
 
 I am using the QML textbook Chapter 35 instructions to create a plot to assess the difference between these conditions.
 
 ```{r}
 draws_combined_epred_H1 <- rmdl_data_bm_draws_combined %>%
-  select(eng_common_color, eng_rare_color, eng_common_noncolor, eng_rare_noncolor) %>%
-  pivot_longer(eng_common_color:eng_rare_noncolor, names_to = "cond", values_to = "epred") %>%
+  select(eng_common_color, eng_common_noncolor) %>%
+  pivot_longer(eng_common_color:eng_common_noncolor, names_to = "cond", values_to = "epred") %>%
   mutate(
     cond = case_when(
-      cond == "eng_common_color" | cond == "eng_rare_color" ~ "Color",
-      cond == "eng_common_noncolor" | cond == "eng_rare_noncolor" ~ "Noncolor",
-      TRUE ~ "" #Catch-all, should never be triggered
-     )
-  ) 
+      cond == "eng_common_color" ~ "Common Color",
+      cond == "eng_common_noncolor" ~ "Common Noncolor"
+    )
+  )
 
-draws_combined_epred_H1 %>%
+H1_epreds_plot <- draws_combined_epred_H1 %>%
   ggplot(aes(epred, cond)) +
-  stat_halfeye() + 
-  labs(title="Expected Log-RT Reaction Time Predictions for English L1 Speakers", x="Predicted Reaction Times (Log-RTs)", y="Condition")
+  stat_halfeye(
+    .width = c(0.5, 0.8, 0.95),
+    aes(fill = after_stat(level))
+  ) + 
+  theme(axis.text.y = element_text(angle = 45, hjust = 1)) +
+  scale_fill_brewer(na.translate = FALSE, name="Credible Intervals", labels = c("95%", "80%", "50%")) + 
+  labs(
+    title="Expected Log-RT Reaction Time Predictions for English L1 Speakers", 
+    subtitle="Common Color and Noncolor Word Condition", 
+    x="Predicted Reaction Times (Log-RTs)", 
+    y="Condition")
+
+H1_epreds_plot
+
+ggsave("figures/H1_epreds_plot.svg")
 ```
 
-#### 2. L1 Rare and Common Colors - Reaction Time Equivalence Hypothesis
+#### Figure 6. L1 Rare and Common Colors - Reaction Time Equivalence Hypothesis
 
-For this hypothesis, L1 reaction times should not be credibly different between the rare and common color conditions.
+For hypothesis 1b, L1 reaction times should not be credibly different between the rare and common color conditions.
 
 ```{r}
 draws_combined_epred_H2 <- rmdl_data_bm_draws_combined %>%
-  select(eng_common_color, eng_rare_color, eng_common_noncolor, eng_rare_noncolor) %>%
-  pivot_longer(eng_common_color:eng_rare_noncolor, names_to = "cond", values_to = "epred") %>%
+  select(eng_common_color, eng_rare_color) %>%
+  pivot_longer(eng_common_color:eng_rare_color, names_to = "cond", values_to = "epred") %>%
   mutate(
     cond = case_when(
-      cond == "eng_common_color" | cond == "eng_rare_color" ~ "Color",
-      cond == "eng_common_noncolor" | cond == "eng_rare_noncolor" ~ "Noncolor",
-      TRUE ~ "" #Catch-all, should never be triggered
-     )
-  ) 
+      cond == "eng_common_color" ~ "Common Color",
+      cond == "eng_rare_color" ~ "Rare Color",
+      TRUE ~ "" #Catch-all, should not ever be used if everything is working
+    )
+  )
 
-draws_combined_epred_H1 %>%
+H2_epreds_plot <- draws_combined_epred_H2 %>%
   ggplot(aes(epred, cond)) +
-  stat_halfeye() + 
-  labs(title="Expected Log-RT Reaction Time Predictions for English L1 Speakers", x="Predicted Reaction Times (Log-RTs)", y="Condition")
+  stat_halfeye(
+    .width = c(0.5, 0.8, 0.95),
+    aes(fill = after_stat(level))
+  ) + 
+  theme(axis.text.y = element_text(angle = 45, hjust = 1)) +
+  scale_fill_brewer(na.translate = FALSE, name="Credible Intervals", labels = c("95%", "80%", "50%")) + 
+  labs(title="Expected Log-RT Reaction Time Predictions for English L1 Speakers", subtitle="Between Rare and Common Color Words",x="Predicted Reaction Times (Log-RTs)", y="Condition")
+
+H2_epreds_plot
+
+ggsave("figures/H2_epreds_plot.svg")
 ```
 
-#### 3. L2 Faster Overall Reaction Times to Colors
+#### Figure 7. L2 Faster Overall Reaction Times to Colors
 
-#### 4. L2 Greater Difference Between Rare and Common Color Reaction Times
+For Hypothesis 2a, I assess the expected predictions for all L2 color responses versus all L1 color responses.
+
+```{r}
+draws_combined_epred_H3 <- rmdl_data_bm_draws_combined %>%
+  select(eng_common_color, mand_common_color, eng_rare_color, mand_rare_color) %>%
+  pivot_longer(eng_common_color:mand_rare_color, names_to = "cond", values_to = "epred") %>%
+  #Combining all color responses while keeping L1 and L2 separate to compare color responses between groups
+  mutate(
+    cond = case_when(
+      cond == "eng_common_color" | cond == "eng_rare_color" ~ "L1 English, Color Word",
+      cond == "mand_common_color" | cond == "mand_rare_color" ~ "L2 English, Color Word",
+      TRUE ~ "" #Catch-all, should not ever be used if everything is working
+    )
+  )
+
+H3_epreds_plot <- draws_combined_epred_H3 %>%
+  ggplot(aes(epred, cond)) +
+  stat_halfeye(
+    .width = c(0.5, 0.8, 0.95),
+    aes(fill = after_stat(level))
+  ) + 
+  theme(axis.text.y = element_text(angle = 45, hjust = 1)) +
+  scale_fill_brewer(na.translate = FALSE, name="Credible Intervals", labels = c("95%", "80%", "50%")) + 
+  labs(title="Expected Log-RT Reaction Time Predictions for English L1 Speakers", subtitle="Between Rare and Common Color Words",x="Predicted Reaction Times (Log-RTs)", y="Condition")
+
+H3_epreds_plot
+
+ggsave("figures/H3_epreds_plot.svg")
+```
+
+#### Figure 8. L2 Greater Difference Between Rare and Common Color Reaction Times
+
+Now we look at the statistical average differences between rare and common color RTs for L2 and L1 English speakers.
+
+```{r}
+draws_combined_epred_H4 <- rmdl_data_bm_draws_combined %>%
+  select(eng_common_color, mand_common_color, eng_rare_color, mand_rare_color) %>%
+  pivot_longer(eng_common_color:mand_rare_color, names_to = "cond", values_to = "epred") %>%
+  separate(cond, c("Language","Rarity")) %>%
+  #Simple mutate to rename for plot Y axis labels
+  mutate(
+    Rarity = case_when(
+      Rarity == "rare" ~ "Rare Color Word",
+      Rarity == "common" ~ "Common Color Word",
+      TRUE ~ "" #Catch-all, should not ever be used if everything is working
+    )
+  )
+
+draws_combined_epred_H4 %>%
+  ggplot(aes(epred, Rarity, fill=Language)) +
+  stat_halfeye(alpha=0.75) + 
+  scale_fill_manual(labels = c("English L1", "English L2"), values = c("orchid2", "seagreen")) +
+  theme(axis.text.y = element_text(angle = 45, hjust = 1)) +
+  labs(title="Expected Log-RT Reaction Time Predictions for English L1 and L2 Speakers", subtitle="Between Rare and Common Color Words",x="Predicted Reaction Times (Log-RTs)", y="Condition")
+```
 
 ## Discussion
 
-*Write a brief discussion of the your model results in light of the research question.*
+*Report the results of the model. Write a brief discussion of the your model results in light of the research question.*
+
+### Limitations
+
+Should have matched common/rare word actual color identity much more closely, if length could be matched too
 
 ## Appendix
 
@@ -342,6 +490,8 @@ word_df_final %>%
     digits = 2,
     col.names = c("Word", "Rarity", "Color or Noncolor", "SUBTLEX Zipf Score (UK)", "Length in Letters")
   ) %>% kable_styling()
+
+write_csv(word_df_final, "testable_materials/exp_stimuli.csv")
 ```
 
 ### B. Participant Language Proficiency Survey Results
