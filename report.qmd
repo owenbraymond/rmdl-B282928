@@ -1,7 +1,7 @@
 ---
 title: "RMDL Assessment 2: Data Analysis Report"
 authors:
-  - name: YOUR EXAM NUMBER
+  - name: B282928
 bibliography: references.bib
 execute: 
   echo: true
@@ -9,19 +9,45 @@ execute:
 
 ## Background
 
-- *Instructions are given in italics. You should remove all instructions before submitting*.
-
-- *You MUST include all code and code output in this report. This is a data analysis report, not an essay or journal article.*
-
 *Write a brief literature background for your Stroop task study. Explicitly state your Research Questions and, if available, your Research Hypotheses.*
 
-### Research Questions/Hypotheses
+In English, word frequency is among the most important predictors of lexical recognition reaction times, accounting for substantial variance beyond other word features (Brysbaert et al, 2011). However, word frequency facilitation of lexical recognition is not uniform among speaker populations of a language. Diependaele et al (2013) found that the word frequency facilitation effect was much steeper in L2 English speakers than native speakers. Diependaele et al describe this asymmetry in the Lexical Entrenchment Account, which predicts that L2 speakers have weaker lexical representations for low-frequency words, while native speakers maintain relatively stronger representations of low-frequency words in the lexicon. Under this account, L2 speakers show longer reaction times on average due to weaker lexical entrenchment. However, for L2 speakers, increases in word frequency lead to proportionally greater facilitation of lexical recognition than for native speakers. This finding has been replicated in lexical decision tasks in Brysbaert et al (2017), which found that the frequency and language group interaction described above disappeared when controlling for vocabulary size, suggesting that it is lexical entrenchment, and not simply L2 status, that drives the asymmetry.
+
+While the asymmetric relationship between word frequency and word recognition reaction times between L1 and L2 speakers has been studied under the Lexical Entrenchment Account, the theory's application to semantic representations of the word forms is less clear. The Stroop paradigm assesses participants' ability to "inhibit cognitive interference that occurs when the processing of a specific stimulus feature \[lexical orthography\] impedes the simultaneous processing of a second stimulus attribute \[color\]," causing a reaction time delay to conflicting orthographic-color pairs as the semantic activation of the written word conflicts with the font color itself. Therfore, whereas Diependale et al (2013) and Brysbaert et al (2017) investigated lexical recognition, this study seeks to better understand word recognition *automaticity* through the Stroop task paradigm.
+
+### Research Questions
+
+The Lexical Entrenchment Account predicts lower lexical entrenchment for L2 speakers of English overall, and a greater relative difference in entrenchment between frequent and infrequent English words.
+
+1.  Does reduced lexical entrenchment lead to a reduction in automatic semantic activation as seen through the Stroop effect?
+2.  If so, does the asymmetric impact of word frequency on L1 and L2 speakers' lexical decision reaction times exist for automatic semantic interference as well?
+
+### Research Hypotheses
+
+1.  Given
 
 ## Methods
 
-*Briefly report the methods of the study (participants, materials, procedure, statistical analysis...). Note that when discussing the statistical analysis you should clearly state how the analysis results will be used to assess the RQs/RHs (be as specific and precise as you can). Include an Open Research/Data availability statement.*
+*Briefly report the methods of the study (participants, materials, procedure, statistical analysis...). Note that when discussing the statistical analysis you should clearly state how the analysis results will be used to assess the RQs/RHs (be as specific and precise as you can). **Include an Open Research/Data availability statement.***
 
 ## Data
+
+### Workspace Setup
+
+```{r}
+library(tidyverse)
+library(languageR)
+library(ggplot2)
+library(devtools)
+library(brms)
+library(dplyr)
+library(plotly)
+library(posterior)
+library(kableExtra)
+devtools::install_github("JackEdTaylor/LexOPS@*release")
+
+lexops_df <- LexOPS::lexops
+```
 
 *Remember to include all code and code output in the submission.*
 
@@ -29,26 +55,427 @@ execute:
 
 *Read the data here. If the data needs processing, like mutating columns or creating new ones, briefly explain why processing is needed and what you did*. *Include a description of each of the relevant columns in the data.*
 
+The actual trial will reduce to 4 test colors to allow participants to lay 4 fingers over the 1-4 keyboard keys, increasing viability of reaction times. 8 keys may be too slow in baseline response to generate useful data.
+
+with that in mind, let's cut the tibble down to size while keeping the word length balance.
+
 ```{r}
 #| label: read-data
 
-# Example code: delete
-1 + 1
 
+library(LexOPS)
+
+common_colors <- c("green", "brown", "blue", "black")
+rare_colors <- c("sepia", "ochre", "mauve", "aqua")
+common_noncolors <- c("fast", "slow", "big", "small")
+rare_noncolors <- c("apex", "tusk", "nymph", "irk")
+
+my_words <- c(common_colors, rare_colors, common_noncolors, rare_noncolors)
+
+word_df <- data.frame(string = my_words) %>%
+  mutate(rarity = case_when(
+    string %in% common_colors | string %in% common_noncolors ~ "common",
+    string %in% rare_colors | string %in% rare_noncolors ~ "rare",
+    TRUE ~ "other" # Catch-all
+  ))
+
+word_df <- word_df %>%
+  mutate(color_noncolor = case_when(
+    string %in% common_colors | string %in% rare_colors ~ "color",
+    string %in% common_noncolors | string %in% rare_noncolors ~ "noncolor",
+    TRUE ~ "other" # Catch-all
+  ))
+    
+
+lookup_table <- lexops_df %>%
+  select(string, Zipf.SUBTLEX_UK, Length)
+
+# 2. Join the Zipf scores to your chart
+# This 'appends' the Zipf.SUBTLEX_UK and Length columns to your existing tags
+word_df_final <- word_df %>%
+  left_join(lookup_table, by = "string")
+
+word_df_final <- word_df_final |> 
+  mutate(Zipf.SUBTLEX_UK = round(Zipf.SUBTLEX_UK, digits=2)) |>
+  mutate(combined_condition = paste(rarity, color_noncolor, sep = "_"))
+```
+
+### Importing trial data
+
+```{r}
+files_to_read = list.files(
+  path = "./results/",
+  pattern = "*.csv$",
+  recursive = TRUE,
+  full.names = TRUE
+)
+data_lst <- lapply(files_to_read, function(x) {
+  read_csv(x, skip = 3) #testable includes 3 rows at the top with metadata, skip these to get the main trial data
+})
+
+names(data_lst) <- seq_along(files_to_read)
+
+rmdl_data <- bind_rows(data_lst, .id = "participant_num")
+
+write.csv(rmdl_data, "data/rmdl_data.csv")
+```
+
+Now we clean to get the language proficiency survey data from the Testable data files, and separate out the RT data from that proficiency form data.
+
+```{r}
+survey_responses <- rmdl_data %>%
+  filter(type == "form") %>%
+  mutate(
+    english_level  = ifelse(head == "What is your English language READING ability?", response, NA),
+    mandarin_level = ifelse(head == "What is your Standard Mandarin (普通话) language READING ability?", response, NA),
+    other_level    = ifelse(head == "Are you proficient in or learning any other foreign languages? (Please include the name of the language and your proficiency self-assessment.)", response, NA)
+  ) %>%
+  group_by(participant_num) %>%
+  summarise(
+    english_level  = first(na.omit(english_level)),
+    mandarin_level = first(na.omit(mandarin_level)),
+    other_level    = first(na.omit(other_level))
+  )
+
+rmdl_data <- rmdl_data %>%
+  left_join(survey_responses, by = "participant_num")
+
+#creating labels for stats analysis
+rmdl_data <- rmdl_data %>%
+  mutate(
+    group = case_when(
+      english_level == "Native Speaker" ~ "English",
+      mandarin_level == "Native Speaker" ~ "Mandarin",
+      TRUE ~ "Other L2"
+    )
+  )
+
+
+rmdl_data_RT <- rmdl_data %>%
+  filter(type == "test" & condition1 != "practice") %>%
+  select(participant_num, type, stim1, color, key, condition1, condition2, RT, english_level, mandarin_level, other_level, rarity, color_noncolor, Zipf.SUBTLEX_UK, Length, combined_condition, congruence_condition, correct, group)
 ```
 
 ### Plot the data
 
 *Create relevant plots: for each, include a description of the plot (type, axes, colours used and so on) and a description of relevant patterns.*
 
+Visualizing main data patterns
+
+```{r}
+rmdl_data_RT %>%
+  filter(RT < 4000) %>%
+  ggplot(aes(x = english_level, y = RT, fill = english_level)) +
+  geom_violin(alpha = 0.15) +
+  geom_jitter(width = 0.2, alpha = 0.3, size = 0.8) +
+  facet_wrap(~rarity) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = "English Level", y = "RT (ms)", title = "RT by L1/L2 status and colour rarity")
+```
+
 ### Summarise the data
 
 *Calculate and report appropriate summary measures for relevant variables in the data.*
+
+Describe the summary!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+```{r}
+ rmdl_data_RT %>%
+  group_by(group) %>%
+  summarise(mean = mean(RT), median(RT), sd(RT), min(RT), max(RT), n = n())
+```
 
 ## Regression modelling
 
 *Write an explanation of the regression model(s) you will run to answer the chosen research question. Fit the model and get a model summary and relevant model plots. Report the results of the model.*
 
+```{r}
+my_seed = 4423
+
+#refactor english_level for low to high proficiency
+rmdl_data_RT <- rmdl_data_RT %>%
+  mutate(english_level = factor(english_level, levels = c("Intermediate Proficiency (CEFR B1-B2)", "High Proficiency (CEFR C1-C2)", "Native Speaker")))
+
+rmdl_data_bm <- brm(
+  RT ~ english_level * Zipf.SUBTLEX_UK + color_noncolor + Length + (Zipf.SUBTLEX_UK + Length | participant_num) + (1 | stim1), 
+  data = rmdl_data_RT,
+  family = lognormal,
+  iter = 4000,
+  cores = 4,
+  seed = my_seed,
+  file = "cache/rmdl_bm3",
+  control = list(adapt_delta = 0.999, max_treedepth = 15)
+  )
+```
+
+Summarize the model
+
+```{r}
+summary(rmdl_data_bm, prob=0.89)
+```
+
 ## Discussion
 
 *Write a brief discussion of the your model results in light of the research question.*
+
+## Appendix
+
+### Building the Testable file
+
+We then create a "key" tibble to map keypress responses to font color.
+
+```{r}
+keypress_key <- tibble(
+  color = c("stim1: black","stim1: blue","stim1: green","stim1: brown"),
+  key = c(1, 2, 3, 4)
+)
+```
+
+We cross the conditions to get the experimental stimuli and keys.
+
+```{r}
+exp_trialfile <- crossing(word_df_final, keypress_key)
+```
+
+Now, let's finalize the Testable trial file to label conditions as "congruent" (text color name is the same as font color), "incongruent" (text color name is NOT the same as font color), or "control" (text color name cannot be related to font color).
+
+```{r}
+exp_trialfile <- exp_trialfile %>% mutate(
+  congruence_condition = case_when(
+    color_noncolor == "color" & rarity == "common" & paste0("stim1: ", string) == color ~ "congruent",
+    color_noncolor == "color" & rarity == "common" & paste0("stim1: ", string) != color ~ "incongruent",
+    TRUE ~ "control"
+  )
+)
+```
+
+We want to get a 1:1 ratio of critical vs control trials
+
+```{r}
+exp_trialfile_crit <- exp_trialfile %>% 
+  filter(color_noncolor == "color") %>%
+  crossing(1:2)
+  
+  
+exp_trialfile_cont <- exp_trialfile %>% 
+  filter(color_noncolor != "color")
+
+exp_trialfile <- bind_rows(exp_trialfile_crit, exp_trialfile_cont)
+```
+
+Let's add in the instructions and practice trials for testable.
+
+```{r}
+head_block1 <- tibble(
+  type = "instructions",
+  stim1 = "",
+  color = "",
+  key = 0,
+  condition1 = "",
+  condition2 = "",
+  feedback = "",
+  trialText = "",
+  stimFormat = "",
+  ITI	= 0,
+  button1 = "NEXT",
+  keyboard = "",
+  random = 1,
+  required = "",
+  title = "Welcome to the experiment",
+  content = "First, we'd like to collect some information about your language background. Please click NEXT and answer the questions on the form.",
+  head = "",
+  responseType = ""
+)
+
+#English Proficiency Check Row
+head_block2 <- tibble(
+  type = "form",
+  stim1 = "",
+  color = "",
+  key = 0,
+  condition1 = "",
+  condition2 = "",
+  feedback = "",
+  trialText = "",
+  stimFormat = "",
+  ITI	= 0,
+  button1 = "NEXT",
+  keyboard = "",
+  random = 2,
+  title = "",
+  content = "",
+  responseType = "radio",
+  required = "1",
+  head = "What is your English language READING ability?",
+  responseOptions = "Native Speaker;High Proficiency (CEFR C1-C2);Intermediate Proficiency (CEFR B1-B2);Low Proficiency (CEFR A1-A2);No proficiency:exclusive"
+)
+
+#Mandarin Proficiency Check Row
+head_block3 <- tibble(
+  type = "form",
+  stim1 = "",
+  color = "",
+  key = 0,
+  condition1 = "",
+  condition2 = "",
+  feedback = "",
+  trialText = "",
+  stimFormat = "",
+  ITI	= 0,
+  button1 = "",
+  keyboard = "",
+  random = 3,
+  title = "",
+  content = "",
+  responseType = "radio",
+  required = "1",
+  head = "What is your Standard Mandarin (普通话) language READING ability?",
+  responseOptions = "Native Speaker;High Proficiency (CEFR C1-C2);Intermediate Proficiency (CEFR B1-B2);Low Proficiency (CEFR A1-A2);No proficiency:exclusive"
+)
+
+head_block4 <- tibble(
+  type = "form",
+  stim1 = "",
+  color = "",
+  key = 0,
+  condition1 = "",
+  condition2 = "",
+  feedback = "",
+  trialText = "",
+  stimFormat = "",
+  ITI	= 0,
+  button1 = "",
+  keyboard = "",
+  random = 4,
+  title = "",
+  content = "",
+  responseType = "box",
+  required = "",
+  head = "Are you proficient in or learning any other foreign languages? (Please include the name of the language and your proficiency self-assessment.)",
+  responseOptions = ""
+)
+
+head_block5 <- tibble(
+  type = "instructions",
+  stim1 = "",
+  color = "",
+  key = 0,
+  condition1 = "",
+  condition2 = "",
+  feedback = "",
+  trialText = "",
+  stimFormat = "",
+  ITI	= 0,
+  button1 = "NEXT",
+  keyboard = "",
+  random = 5,
+  required = "",
+  title = "Thank you for your survey responses! ",
+  content = "Let's move on to the experiment. \nIn this study, you are asked to indicate the FONT COLOR of the text, ignoring the meaning of the word. Please use the keyboard keys 1, 2, 3, and 4 to indicate the FONT COLOR of the word presented on the screen:<br><br>
+Press 1 for BLACK, <br>2 for <span style=\"color:blue;\">BLUE</span>, <br>3 for <span style=\"color:green;\">GREEN</span>, and <br>4 for <span style=\"color:brown;\">BROWN</span> <br><br>
+
+Please answer as accurately and as quickly as possible. Let's do some practice!",
+  head = "",
+  responseType = ""
+)
+
+
+practice_block <- tribble(
+  ~stim1,   ~color, ~key,
+  "BLACK",  "stim1: black",    1,
+  "GREEN",  "stim1: black",    1,
+  "BLUE",   "stim1: blue",     2,
+  "BROWN",  "stim1: green",    3,
+  "TUSK",   "stim1: blue",     2,
+  "SEPIA",  "stim1: green",    3,
+  "IRK",    "stim1: brown",    4,
+  "NYMPH",  "stim1: brown",    4
+  ) %>%
+  mutate(
+    type = "test",
+    condition1 = "practice",
+    feedback = glue::glue('correct: Correct! You responded in %RT% ms ; incorrect: Incorrect! The font color was {toupper(substring(color, 7))}. You responded in %RT% ms'),
+    stimFormat = "word",
+    ITI = 400,
+    keyboard = "1 2 3 4",
+    random = 6,
+    required = "",
+    title = "",
+    content = "",
+    trialText = "Press 1 for BLACK, <br>2 for <span style=\"color:blue;\">BLUE</span>, <br>3 for <span style=\"color:green;\">GREEN</span>, and <br>4 for <span style=\"color:brown;\">BROWN</span>",
+    button1 = "",
+    head = "",
+    responseType = ""
+  )
+
+head_block6 <- tibble(
+  type = "instructions",
+  stim1 = "",
+  color = "",
+  key = 0, 
+  condition1 = "",
+  condition2 = "",
+  feedback = "",
+  trialText = "",
+  stimFormat = "",
+  ITI	= 0,
+  button1 = "NEXT",
+  keyboard = "",
+  random = 7,
+  required = "",
+  title = "Ready to start?",
+  content = "Remember: Press 1 for BLACK, <br>2 for <span style=\"color:blue;\">BLUE</span>, <br>3 for <span style=\"color:green;\">GREEN</span>, and <br>4 for <span style=\"color:brown;\">BROWN</span>",
+  head = "",
+  responseType = ""
+)
+```
+
+Now we transform it into a Testable-usable file:
+
+```{r}
+exp_trialfile_main <- exp_trialfile %>% mutate(
+  type = "test",
+  stim1 = toupper(string),
+  condition1 = case_when(
+    congruence_condition != "control" ~ "critical",
+    congruence_condition == "control" ~ "filler"
+  ),
+  condition2 = congruence_condition,
+  trialText = case_when(
+    type != "instructions" ~ "Press 1 for BLACK, <br>2 for <span style=\"color:blue;\">BLUE</span>, <br>3 for <span style=\"color:green;\">GREEN</span>, and <br>4 for <span style=\"color:brown;\">BROWN</span>",
+    TRUE ~ ""
+  ),
+  feedback = "",
+  stimFormat = case_when(
+    type != "instructions" ~ "word",
+    TRUE ~ ""
+  ),
+  ITI = case_when(
+    type != "instructions" ~ 400,
+    TRUE ~ 0
+  ),
+  button1 = case_when(
+    type == "instructions" ~ "NEXT",
+    TRUE ~ ""
+  ),
+  keyboard = case_when(
+    type != "instructions" ~ "1 2 3 4",
+    TRUE ~ ""
+  ),
+  random = 8,
+  required = "",
+  title = "",
+  content = "",
+  head = "",
+  responseType = ""
+)
+```
+
+Now let's save it for use in Testable.
+
+```{r}
+exp_trialfile_final <- bind_rows(head_block1, head_block2, head_block3, head_block4, head_block5, practice_block, head_block6, exp_trialfile_main) %>%
+  mutate(stimSize = "175%")
+
+write_csv(exp_trialfile_final, "testable_materials/exp_trialfile.csv")
+```
