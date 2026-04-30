@@ -29,7 +29,7 @@ The Lexical Entrenchment Account predicts lower lexical entrenchment for L2 spea
 
 Following assumptions of the lexical entrenchment account,
 
-1.  I predict that L1 speakers of English will have similar lexical entrenchment for infrequent (rare) and frequent (common) word colors. This will lead to credibly longer reaction times between the color and non-color words, demonstrating the Stroop effect, but reaction times between rare and common collors will not be credibly statistically different.
+1.  I predict that L1 speakers of English will have similar lexical entrenchment for infrequent (rare) and frequent (common) word colors. This will lead to credibly longer reaction times between the color and non-color words, demonstrating the Stroop effect, but reaction times between rare and common colors will not be credibly statistically different.
 2.  On the other hand, L2 English speakers will have much lower lexical entrenchment for rare words in English, leading to reduced automatic semantic interference during the Stroop task. Thus, L2 participants will respond more quickly overall, and will display a credibly greater difference in reaction times between rare and common words due to the greater difference in lexical entrenchment between the two conditions as compared to L1 speakers.
 
 ## Methods
@@ -58,7 +58,7 @@ An additional freeform text box was included for participants to indicate profic
 
 After the language proficiency survey, an information screen was presented describing the experimental task. Participants were instructed that words would appear on the screen, and asked to indicate the font color of the text, ignoring the meaning of the word. They were asked to use the keyboard keys 1, 2, 3, and 4 to indicate the font color of the word, and to answer as accurately and as quickly as possible. Throughout the experiment, a legend displaying the key from number key to color was shown at the bottom of the screen: "Press 1 for BLACK, 2 for [BLUE]{style="color:blue;"}, 3 for [GREEN]{style="color:green;"}, and 4 for [BROWN]{style="color:brown;"}."
 
-Following this, eight practice trials were presented to the participant with two congruent, two incongruent, and four control trials. After the practice block, one main trial block was presented to participants. Every stimulus word was presented in all four font colors, in a fully randomized order, for a total of 96 trials. Reaction times for each trial was measured as the difference between stimulus presentation onset and participant keypress onset.
+Following this, eight practice trials were presented to the participant with two congruent, two incongruent, and four control trials. After the practice block, one main trial block was presented to participants. Color word stimuli were presented twice across the four font colors, while non-color word stimuli were presented once across all four font colors, yielding a 2:1 ratio of color to non-color trials and a total of 96 main trials. Reaction time for each trial was measured as the difference between stimulus presentation onset and participant keypress.
 
 ### Statistical Analysis
 
@@ -379,7 +379,7 @@ rmdl_data_bm_draws_combined <- rmdl_data_bm_draws %>% mutate(
 
 Now, we can look at the relevant variables described in Methods to address the research hypothesis.
 
-#### Figure 5. L1 Stroop Replication
+#### Figure 4. L1 Stroop Replication
 
 For hypothesis 1a, L1 reaction times in the color condition should be credibly slower than in the noncolor condition, regardless of rarity.
 
@@ -420,7 +420,7 @@ H1_epreds_plot
 ggsave("figures/H1_epreds_plot.svg")
 ```
 
-#### Figure 6. L1 Rare and Common Colors - Reaction Time Equivalence Hypothesis
+#### Figure 5. L1 Rare and Common Colors - Reaction Time Equivalence Hypothesis
 
 For hypothesis 1b, L1 reaction times should not be credibly different between the rare and common color conditions.
 
@@ -460,7 +460,7 @@ H2_epreds_plot
 ggsave("figures/H2_epreds_plot.svg")
 ```
 
-#### Figure 7. L2 Faster Overall Reaction Times to Colors
+#### Figure 6. L2 Faster Overall Reaction Times to Colors
 
 For Hypothesis 2a, I assess the expected predictions for all L2 color responses versus all L1 color responses.
 
@@ -501,7 +501,7 @@ H3_epreds_plot
 ggsave("figures/H3_epreds_plot.svg")
 ```
 
-#### Figure 8. L2 Greater Difference Between Rare and Common Color Reaction Times
+#### Figure 7. L2 Greater Difference Between Rare and Common Color Reaction Times
 
 Now we look at the statistical average differences between rare and common color RTs for L2 and L1 English speakers.
 
@@ -512,7 +512,7 @@ draws_combined_epred_H4 <- rmdl_data_bm_draws_combined %>%
     eng_common_color:mand_rare_color, 
     names_to = "cond", 
     values_to = "epred") %>%
-  separate(cond, c("Language","Rarity")) %>%
+  separate(cond, c("Language","Rarity", extra = "merge")) %>%
   #Simple mutate to rename for plot Y axis labels
   mutate(
     Rarity = case_when(
@@ -542,15 +542,13 @@ As shown by the model summary, the 95% credible interval for all predictors cros
 
 These findings bear upon the hypotheses laid out in the Methods section of the report.
 
-#### Hypothesis 1
+### Hypothesis 1
 
 The results of this study do not replicate the Stroop effect. At 95% credibility, there was no statistical difference in L1 English reaction times between color and non-color stimulus items in naming the stimulus font color.
 
 Even so, L1 English participants did not have credibly longer or shorter reaction times between the common and rare color stimulus items in the study. While this finding aligns with the hypothesis laid out in the Methods section above, this result should be treated with caution; given that the study failed to replicate the Stroop effect, this result does not provide insight into automatic semantic inhibition based on word frequency among L1 speakers of English.
 
-#### Hypothesis 2
-
-Compared to the L1 group, L2 (Non-native) English speakers will respond to all color items more quickly overall due to lower lexical entrenchment and thus less semantic interference when naming font colors.
+### Hypothesis 2
 
 As shown by the raw data summary, the prediction of hypothesis 2a that L2 English speakers would respond to all color words more quickly than L1 English speakers was not borne out by the results of this study. On average, L2 English responses were globally slower across all conditions. However, the statistical model did not find this difference credible at the 95% CrI, and therefore, there is no evidence from this study that L2 English speakers reliably respond differently than L1 English speakers to color words in the Stroop task paradigm.
 
@@ -923,4 +921,3 @@ exp_trialfile_final <- bind_rows(
 
 write_csv(exp_trialfile_final, "testable_materials/exp_trialfile.csv")
 ```
-
