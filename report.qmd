@@ -94,9 +94,9 @@ All items relevant to the project are available on GitHub at [**https://github.c
 
 Anonymized participant experimental data used for this analysis can be found in the `/results/` folder of this repository.
 
-The stimuli used in the experiment are generated within this file in Appendix A and saved as a .csv in `testable_materials` in this repository.
+The stimuli used in the experiment are generated within this file in Appendix A and saved as a .csv in `/testable_materials/` in this repository.
 
-The Testable experiment file used to run the experiment is generated within this file in Appendix C and saved as a .csv in `testable_materials` in this repository. (This trial file is compatible with Testable as of April 29, 2026.)
+The Testable experiment file used to run the experiment is generated within this file in Appendix C and saved as a .csv in `/testable_materials/` in this repository. (This trial file is compatible with Testable as of April 29, 2026.)
 
 ## Data
 
