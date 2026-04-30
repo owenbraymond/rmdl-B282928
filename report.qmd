@@ -534,6 +534,8 @@ draws_combined_epred_H4 %>%
     subtitle="Between Rare and Common Color Words",
     x="Predicted Reaction Times (Log-RTs)",
     y="Condition")
+
+ggsave("figures/draws_combined_epred_H4.svg")
 ```
 
 ## Discussion
